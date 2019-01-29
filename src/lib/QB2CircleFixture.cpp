@@ -26,7 +26,7 @@ void QB2CircleFixture::Paint(QPainter* painter) const
     float32 radius = b2fixture_->GetShape()->m_radius;
 
     QPointF center = ellipse_.center();
-    QPointF right = {center.x() + radius, 0};
+    QPointF right = {center.x() + radius, center.y()};
     painter->drawEllipse(ellipse_);
     painter->drawLine(center, right);
 }
@@ -39,7 +39,8 @@ QRectF QB2CircleFixture::boundingRect() const
 QRectF QB2CircleFixture::CreateEllipse() const
 {
     float32 radius = b2fixture_->GetShape()->m_radius;
-    return QRectF(0, 0, radius, radius);
+    float32 diameter = radius * 2;
+    return QRectF(-radius, -radius, diameter, diameter);
 }
 
 b2Shape* QB2CircleFixture::CreateShape(float32 radius) const
