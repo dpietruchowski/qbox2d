@@ -17,6 +17,7 @@ public:
 
     void Paint(QPainter* painter) const override;
     QRectF boundingRect() const override;
+    void Debug() const override;
 
     QRectF CreateEllipse() const;
 

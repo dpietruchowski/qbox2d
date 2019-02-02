@@ -25,6 +25,8 @@ public:
     virtual void Paint(QPainter* painter) const = 0;
     virtual QRectF boundingRect() const = 0;
 
+    virtual void Debug() const = 0;
+
 private:
     void Create(const b2FixtureDef& fixtureDef);
     void Delete();

@@ -32,7 +32,9 @@ SOURCES += \
     QB2Body.cpp \
     QB2Fixture.cpp \
     QB2CircleFixture.cpp \
-    QB2PolygonFixture.cpp
+    QB2PolygonFixture.cpp \
+    QB2Scene.cpp \
+    QB2WorldScene.cpp
 
 HEADERS += \
         QB2World.h \
@@ -41,7 +43,9 @@ HEADERS += \
     QB2Body.h \
     QB2Fixture.h \
     QB2CircleFixture.h \
-    QB2PolygonFixture.h
+    QB2PolygonFixture.h \
+    QB2Scene.h \
+    QB2WorldScene.h
 
 unix {
     target.path = /usr/lib

@@ -36,6 +36,11 @@ QRectF QB2CircleFixture::boundingRect() const
     return ellipse_.marginsAdded({2, 2, 2, 2});
 }
 
+void QB2CircleFixture::Debug() const
+{
+
+}
+
 QRectF QB2CircleFixture::CreateEllipse() const
 {
     float32 radius = b2fixture_->GetShape()->m_radius;

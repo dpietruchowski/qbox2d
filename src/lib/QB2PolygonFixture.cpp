@@ -1,6 +1,7 @@
 #include "QB2PolygonFixture.h"
 
 #include <QPainter>
+#include <QDebug>
 
 #include "Box2D/Box2D.h"
 
@@ -29,6 +30,10 @@ void QB2PolygonFixture::Paint(QPainter* painter) const
 QRectF QB2PolygonFixture::boundingRect() const
 {
     return polygon_.boundingRect().marginsAdded({2, 2, 2, 2});
+}
+
+void QB2PolygonFixture::Debug() const
+{
 }
 
 QPolygonF QB2PolygonFixture::CreatePolygon() const

@@ -24,33 +24,36 @@ public:
     void AddFixture(QB2Fixture& fixture);
     void RemoveFixture(QB2Fixture& fixture);
 
+    void SetPos(QPointF pos);
+    void SetPos(float x, float y);
+
+    // angle in degrees
+    void SetAngle(float angle);
+    QPointF GetPos() const;
+    float GetAngle() const;
+
+    void SetAwake(bool awake);
+    bool IsAwake() const;
+
     void Update();
-
-    QB2CircleFixture CreateCircleFixture(float32 radius,
-                                     const b2FixtureParams& params,
-                                     const b2Filter& filter = b2Filter());
-    QB2PolygonFixture CreatePolygonFixture(const std::vector<b2Vec2>& vertices,
-                                      const b2FixtureParams& params,
-                                      const b2Filter& filter = b2Filter());
-
-    std::unique_ptr<QB2Fixture> CreateCircleUPtrFixture(float32 radius,
-                                                          const b2FixtureParams& params,
-                                                          const b2Filter& filter = b2Filter());
-    std::unique_ptr<QB2Fixture> CreatePolygonUPtrFixture(const std::vector<b2Vec2>& vertices,
-                                                           const b2FixtureParams& params,
-                                                           const b2Filter& filter = b2Filter());
-
 
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
                QWidget* widget) override;
 
     QRectF boundingRect() const override;
 
+protected:
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+
 private:
     b2Fixture* CreateB2Fixture(const b2FixtureDef& fixtureDef);
     void DestroyB2Fixture(b2Fixture* fixture);
     void Create(const b2BodyDef& bodyDef);
     void Delete();
+
+    virtual void OnUpdate() {}
 
 private:
     b2Body* b2body_;

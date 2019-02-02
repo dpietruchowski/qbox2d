@@ -2,6 +2,7 @@
 
 #include <QPainter>
 #include <QtMath>
+#include <QGraphicsSceneMouseEvent>
 
 #include "QB2Fixture.h"
 #include "QB2CircleFixture.h"
@@ -38,47 +39,61 @@ void QB2Body::RemoveFixture(QB2Fixture& fixture)
     fixtures_.Remove(fixture);
 }
 
+void QB2Body::SetPos(QPointF pos)
+{
+    SetPos(pos.x(), pos.y());
+}
+
+
+void QB2Body::SetPos(float x, float y)
+{
+    b2body_->SetTransform({x, y}, b2body_->GetAngle());
+}
+
+void QB2Body::SetAngle(float angle)
+{
+    QPointF pos = GetPos();
+    b2body_->SetTransform({pos.x(), pos.y()}, qDegreesToRadians(angle));
+}
+
+QPointF QB2Body::GetPos() const
+{
+    b2Vec2 pos = b2body_->GetPosition();
+    return QPointF(pos.x, pos.y);
+}
+
+float QB2Body::GetAngle() const
+{
+    return qRadiansToDegrees(b2body_->GetAngle());
+}
+
+void QB2Body::SetAwake(bool awake)
+{
+    b2body_->SetAwake(awake);
+}
+
+bool QB2Body::IsAwake() const
+{
+    return b2body_->IsAwake();
+}
+
 void QB2Body::Update()
 {
-    setPos(b2body_->GetPosition().x, b2body_->GetPosition().y);
-    setRotation(qDegreesToRadians(b2body_->GetAngle()));
-}
-
-QB2CircleFixture QB2Body::CreateCircleFixture(float32 radius,
-                                                  const b2FixtureParams& params,
-                                                  const b2Filter& filter)
-{
-    return QB2CircleFixture(radius, params, filter, *this);
-}
-
-QB2PolygonFixture QB2Body::CreatePolygonFixture(const std::vector<b2Vec2>& vertices,
-                                                    const b2FixtureParams& params,
-                                                    const b2Filter& filter)
-{
-    return QB2PolygonFixture(vertices, params, filter, *this);
-}
-
-std::unique_ptr<QB2Fixture> QB2Body::CreateCircleUPtrFixture(float32 radius,
-                                                                 const b2FixtureParams& params,
-                                                                 const b2Filter& filter)
-{
-    return std::make_unique<QB2CircleFixture>(radius, params, filter, *this);
-}
-
-std::unique_ptr<QB2Fixture> QB2Body::CreatePolygonUPtrFixture(const std::vector<b2Vec2>& vertices,
-                                                                  const b2FixtureParams& params,
-                                                                  const b2Filter& filter)
-{
-    return std::make_unique<QB2PolygonFixture>(vertices, params, filter, *this);
+    for(const QB2Fixture& fixture: fixtures_) {
+        fixture.Debug();
+    }
+    setPos(GetPos());
+    setRotation(GetAngle());
+    OnUpdate();
 }
 
 void QB2Body::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     for(const QB2Fixture& fixture: fixtures_) {
-        painter->save();
+        /*painter->save();
         painter->setBrush(QBrush(QColor(Qt::yellow)));
         painter->drawRect(fixture.boundingRect());
-        painter->restore();
+        painter->restore();*/
         painter->save();
         fixture.Paint(painter);
         painter->restore();
@@ -95,6 +110,21 @@ QRectF QB2Body::boundingRect() const
         rect = rect.united(fixture.boundingRect());
     }
     return rect;
+}
+
+void QB2Body::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
+{
+    SetPos(event->scenePos());
+}
+
+void QB2Body::mousePressEvent(QGraphicsSceneMouseEvent* event)
+{
+    SetAwake(false);
+}
+
+void QB2Body::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+{
+    SetAwake(true);
 }
 
 b2Fixture* QB2Body::CreateB2Fixture(const b2FixtureDef& fixtureDef)
