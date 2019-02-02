@@ -31,10 +31,12 @@ LIBS += -L../lib -lqbox2d
 
 SOURCES += \
     main.cpp \
-    MainWindow.cpp
+    MainWindow.cpp \
+    MyWorld.cpp
 
 HEADERS += \
-    MainWindow.h
+    MainWindow.h \
+    MyWorld.h
 
 
 unix {

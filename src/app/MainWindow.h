@@ -2,11 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
-#include "QB2World.h"
-#include "QB2Body.h"
-#include "QB2Fixture.h"
-#include "QB2CircleFixture.h"
+#include "QB2WorldScene.h"
+#include "MyWorld.h"
 
 namespace Ui {
 class MainWindow;
@@ -22,13 +19,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QB2World scene_;
-    std::unique_ptr<QB2Body> body;
-    std::unique_ptr<QB2Fixture> fixture;
-    std::unique_ptr<QB2Body> body2;
-    std::unique_ptr<QB2Fixture> fixture2;
-    std::unique_ptr<QB2Body> body3;
-    std::unique_ptr<QB2Fixture> fixture3;
+    QB2WorldScene ws;
 };
 
 #endif // MAINWINDOW_H
