@@ -37,6 +37,8 @@ public:
 
     void Update();
 
+    virtual void OnUpdate() {}
+
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
                QWidget* widget) override;
 
@@ -52,8 +54,6 @@ private:
     void DestroyB2Fixture(b2Fixture* fixture);
     void Create(const b2BodyDef& bodyDef);
     void Delete();
-
-    virtual void OnUpdate() {}
 
 private:
     b2Body* b2body_;

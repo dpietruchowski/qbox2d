@@ -2,7 +2,6 @@
 #define QB2WORLDSCENE_H
 
 #include <QThread>
-#include <QTimer>
 
 #include "QB2Scene.h"
 #include "QB2World.h"
@@ -16,13 +15,11 @@ public:
     QB2Scene& GetScene();
     void SetWorld(std::unique_ptr<QB2World> world);
     void ConnectWorldScene();
-    void ConnectTimerWorld();
 
 private:
+    QThread worldThread_;
     QB2Scene scene_;
     std::unique_ptr<QB2World> world_;
-    QThread worldThread_;
-    QTimer worldTimer_;
 };
 
 #endif // QB2WORLDSCENE_H

@@ -15,15 +15,21 @@ class QBOX2DSHARED_EXPORT QB2World : public QObject
     friend class QB2Body;
 public:
     explicit QB2World(const b2Vec2& gravity, QObject *parent = nullptr);
+    virtual ~QB2World() = default;
 
-    void Step();
     void Init();
+    void Start();
 
 signals:
-    void BodyAdded(QB2Body& body);
-    void BodyRemoved(QB2Body& body);
+    void BodyAdded(QB2Body* body);
+    void BodyRemoved(QB2Body* body);
+    void BodyUpdated(QB2Body* body);
+
+protected:
+    void timerEvent(QTimerEvent *event) override;
 
 private:
+    void Step();
     void Update();
     virtual void OnUpdate() = 0;
 

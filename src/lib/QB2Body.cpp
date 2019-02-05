@@ -79,12 +79,12 @@ bool QB2Body::IsAwake() const
 
 void QB2Body::Update()
 {
+    // Must be called from main thread
     for(const QB2Fixture& fixture: fixtures_) {
         fixture.Debug();
     }
     setPos(GetPos());
     setRotation(GetAngle());
-    OnUpdate();
 }
 
 void QB2Body::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)

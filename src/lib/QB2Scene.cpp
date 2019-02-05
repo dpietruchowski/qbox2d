@@ -15,14 +15,19 @@ QB2Scene::QB2Scene(QObject *parent) : QGraphicsScene(parent)
     mousePosText_ = addText("");
 }
 
-void QB2Scene::AddBody(QB2Body& body)
+void QB2Scene::AddBody(QB2Body* body)
 {
-    addItem(&body);
+    addItem(body);
 }
 
-void QB2Scene::RemoveBody(QB2Body& body)
+void QB2Scene::RemoveBody(QB2Body* body)
 {
-    removeItem(&body);
+    removeItem(body);
+}
+
+void QB2Scene::UpdateBody(QB2Body* body)
+{
+    body->Update();
 }
 
 void QB2Scene::drawBackground(QPainter* painter, const QRectF& rect)
@@ -45,15 +50,6 @@ void QB2Scene::drawBackground(QPainter* painter, const QRectF& rect)
         ++i;
        painter->drawLine(rect.left(), y, rect.right(), y);
     }
-    if (rect.top() < 0) {
-        int h = 0;
-        ++h;
-    }
-    if (fmod(rect.top(),step) == 0) {
-        int h = 0;
-        ++h;
-    }
-
     // now draw vertical grid
     qreal startLeft = GetStart(rect.left());
     for (qreal x = startLeft; x <= rect.right(); x += step) {

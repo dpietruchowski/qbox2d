@@ -11,8 +11,9 @@ class QB2Scene : public QGraphicsScene
 public:
     explicit QB2Scene(QObject *parent = nullptr);
 
-    void AddBody(QB2Body& body);
-    void RemoveBody(QB2Body& body);
+    void AddBody(QB2Body* body);
+    void RemoveBody(QB2Body* body);
+    void UpdateBody(QB2Body* body);
 
 protected:
     void drawBackground(QPainter *painter, const QRectF &rect) override;
