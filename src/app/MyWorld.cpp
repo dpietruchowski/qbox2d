@@ -7,9 +7,10 @@ MyWorld::MyWorld(): QB2World({0, 0.1}), ground(*this), circle(*this)
     ground.circle = &circle;
 }
 
-MyCircle::MyCircle(QB2World& world): QB2Body(CreateBodyDef(), world), fixture(30, {0.2, 0.1, 1}, *this)
+MyCircle::MyCircle(QB2World& world): QB2Body(world), fixture(30, {0.2, 0.1, 1}, *this)
 {
-    SetPos({10, 0});
+    SetSleepingAllowed(false);
+    SetPos(100, -20);
 }
 
 void MyCircle::OnUpdate()
@@ -19,14 +20,7 @@ void MyCircle::OnUpdate()
     }
 }
 
-b2BodyDef MyCircle::CreateBodyDef() const
-{
-    b2BodyDef def;
-    def.type = b2_dynamicBody;
-    return def;
-}
-
-MyGround::MyGround(QB2World& world): QB2Body(CreateBodyDef(), world),
+MyGround::MyGround(QB2World& world): QB2Body(world),
     fixture(std::vector<b2Vec2>{
                 {0, 0},
                 {0, 2},
@@ -35,6 +29,8 @@ MyGround::MyGround(QB2World& world): QB2Body(CreateBodyDef(), world),
             },
             b2FixtureParams{0.1, 1, 1}, *this)
 {
+    SetType(b2_staticBody);
+    SetPos(0, 200);
     SetAngle(9);
 }
 
@@ -45,12 +41,4 @@ void MyGround::OnUpdate()
         qDebug() << "  My Ground: " << pos() << " angle: " << GetAngle() << " rotation: " << rotation();
         show = false;
     }
-}
-
-b2BodyDef MyGround::CreateBodyDef() const
-{
-    b2BodyDef def;
-    def.type = b2_staticBody;
-    def.position = {0, 200};
-    return def;
 }

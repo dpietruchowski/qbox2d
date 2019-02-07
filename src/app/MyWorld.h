@@ -14,7 +14,6 @@ public:
 
 private:
     void OnUpdate() override;
-    b2BodyDef CreateBodyDef() const;
 
     QB2CircleFixture fixture;
 };
@@ -27,7 +26,6 @@ public:
 
 private:
     void OnUpdate() override;
-    b2BodyDef CreateBodyDef() const;
     QB2PolygonFixture fixture;
 };
 

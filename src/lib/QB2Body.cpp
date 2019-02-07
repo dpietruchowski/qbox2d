@@ -1,26 +1,38 @@
 #include "QB2Body.h"
 
-#include <QPainter>
-#include <QtMath>
+#include <QApplication>
+#include <QDebug>
 #include <QGraphicsSceneMouseEvent>
+#include <QMutexLocker>
+#include <QPainter>
+#include <QThread>
+#include <QVector2D>
+#include <QtMath>
 
 #include "QB2Fixture.h"
 #include "QB2CircleFixture.h"
 #include "QB2PolygonFixture.h"
 #include "QB2World.h"
 
-QB2Body::QB2Body(const b2BodyDef& bodyDef, QB2World& scene, QGraphicsItem *parent)
+QB2Body::QB2Body(QB2World& scene, QGraphicsItem *parent)
+    : QGraphicsItem(parent), b2body_(nullptr), scene_(scene)
+{
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_dynamicBody;
+    Create(bodyDef);
+}
+
+QB2Body::QB2Body(const b2BodyDef& bodyDef, QB2World& scene, QGraphicsItem* parent)
     : QGraphicsItem(parent), b2body_(nullptr), scene_(scene)
 {
     Create(bodyDef);
 }
 
-QB2Body::QB2Body(const b2Vec2& position, QB2World& scene, QGraphicsItem* parent)
+QB2Body::QB2Body(const QPointF& position, QB2World& scene, QGraphicsItem* parent)
     : QGraphicsItem(parent), b2body_(nullptr), scene_(scene)
 {
     b2BodyDef bodyDef;
-    bodyDef.position = position;
-    bodyDef.type = b2_dynamicBody;
+    bodyDef.position = {position.x(), position.y()};
     Create(bodyDef);
 }
 
@@ -31,11 +43,13 @@ QB2Body::~QB2Body()
 
 void QB2Body::AddFixture(QB2Fixture& fixture)
 {
+    QMutexLocker ml(&mutex_);
     fixtures_.Add(fixture);
 }
 
 void QB2Body::RemoveFixture(QB2Fixture& fixture)
 {
+    QMutexLocker ml(&mutex_);
     fixtures_.Remove(fixture);
 }
 
@@ -47,13 +61,111 @@ void QB2Body::SetPos(QPointF pos)
 
 void QB2Body::SetPos(float x, float y)
 {
+    QMutexLocker ml(&mutex_);
     b2body_->SetTransform({x, y}, b2body_->GetAngle());
 }
 
 void QB2Body::SetAngle(float angle)
 {
+    QMutexLocker ml(&mutex_);
     QPointF pos = GetPos();
     b2body_->SetTransform({pos.x(), pos.y()}, qDegreesToRadians(angle));
+}
+
+void QB2Body::SetLinearVelocity(const QVector2D& velocity)
+{
+    QMutexLocker ml(&mutex_);
+    b2body_->SetLinearVelocity({velocity.x(), velocity.y()});
+}
+
+void QB2Body::SetAngularVelocity(float omega)
+{
+    QMutexLocker ml(&mutex_);
+    b2body_->SetAngularVelocity(omega);
+}
+
+void QB2Body::ApplyForce(const QVector2D& force, const QPointF& point, bool wake)
+{
+    QMutexLocker ml(&mutex_);
+    b2body_->ApplyForce({force.x(), force.y()}, {point.x(), point.y()}, wake);
+}
+
+void QB2Body::ApplyForceToCenter(const QVector2D& force, bool wake)
+{
+    QMutexLocker ml(&mutex_);
+    b2body_->ApplyForceToCenter({force.x(), force.y()}, wake);
+}
+
+void QB2Body::ApplyTorque(float torque, bool wake)
+{
+    QMutexLocker ml(&mutex_);
+    b2body_->ApplyTorque(torque, wake);
+}
+
+void QB2Body::ApplyLinearImpulse(const QVector2D& impulse, const QPointF& point, bool wake)
+{
+    QMutexLocker ml(&mutex_);
+    b2body_->ApplyLinearImpulse({impulse.x(), impulse.y()}, {point.x(), point.y()}, wake);
+}
+
+void QB2Body::ApplyAngularImpulse(float impulse, bool wake)
+{
+    QMutexLocker ml(&mutex_);
+    b2body_->ApplyAngularImpulse(impulse, wake);
+}
+
+void QB2Body::SetLinearDamping(float linearDamping)
+{
+    QMutexLocker ml(&mutex_);
+    b2body_->SetLinearDamping(linearDamping);
+}
+
+void QB2Body::SetAngularDamping(float angularDamping)
+{
+    QMutexLocker ml(&mutex_);
+    b2body_->SetAngularDamping(angularDamping);
+}
+
+void QB2Body::SetGravityScale(float scale)
+{
+    QMutexLocker ml(&mutex_);
+    b2body_->SetGravityScale(scale);
+}
+
+void QB2Body::SetType(b2BodyType type)
+{
+    QMutexLocker ml(&mutex_);
+    b2body_->SetType(type);
+}
+
+void QB2Body::SetBullet(bool bullet)
+{
+    QMutexLocker ml(&mutex_);
+    b2body_->SetBullet(bullet);
+}
+
+void QB2Body::SetSleepingAllowed(bool sleepingAllowed)
+{
+    QMutexLocker ml(&mutex_);
+    b2body_->SetSleepingAllowed(sleepingAllowed);
+}
+
+void QB2Body::SetAwake(bool awake)
+{
+    QMutexLocker ml(&mutex_);
+    b2body_->SetAwake(awake);
+}
+
+void QB2Body::SetActive(bool active)
+{
+    QMutexLocker ml(&mutex_);
+    b2body_->SetActive(active);
+}
+
+void QB2Body::SetFixedRotation(bool fixedRotation)
+{
+    QMutexLocker ml(&mutex_);
+    b2body_->SetFixedRotation(fixedRotation);
 }
 
 QPointF QB2Body::GetPos() const
@@ -67,9 +179,45 @@ float QB2Body::GetAngle() const
     return qRadiansToDegrees(b2body_->GetAngle());
 }
 
-void QB2Body::SetAwake(bool awake)
+QVector2D QB2Body::GetLinearVelocity() const
 {
-    b2body_->SetAwake(awake);
+    b2Vec2 velocity = b2body_->GetLinearVelocity();
+    return {velocity.x, velocity.y};
+}
+
+float32 QB2Body::GetAngularVelocity() const
+{
+    return b2body_->GetAngularDamping();
+}
+
+float QB2Body::GetLinearDamping() const
+{
+    return b2body_->GetLinearDamping();
+}
+
+float QB2Body::GetAngularDamping() const
+{
+    return b2body_->GetAngularDamping();
+}
+
+float QB2Body::GetGravityScale() const
+{
+    return b2body_->GetGravityScale();
+}
+
+b2BodyType QB2Body::GetType() const
+{
+    return b2body_->GetType();
+}
+
+bool QB2Body::IsBullet() const
+{
+    return b2body_->IsBullet();
+}
+
+bool QB2Body::IsSleepingAllowed() const
+{
+    return b2body_->IsSleepingAllowed();
 }
 
 bool QB2Body::IsAwake() const
@@ -77,9 +225,21 @@ bool QB2Body::IsAwake() const
     return b2body_->IsAwake();
 }
 
+bool QB2Body::IsActive() const
+{
+    return b2body_->IsActive();
+}
+
+bool QB2Body::IsFixedRotation() const
+{
+    return b2body_->IsFixedRotation();
+}
+
 void QB2Body::Update()
 {
     // Must be called from main thread
+    if (QThread::currentThread() != QApplication::instance()->thread())
+        qDebug() << "Update called from not main thread!";
     for(const QB2Fixture& fixture: fixtures_) {
         fixture.Debug();
     }
@@ -87,7 +247,7 @@ void QB2Body::Update()
     setRotation(GetAngle());
 }
 
-void QB2Body::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+void QB2Body::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*)
 {
     for(const QB2Fixture& fixture: fixtures_) {
         /*painter->save();
@@ -112,28 +272,15 @@ QRectF QB2Body::boundingRect() const
     return rect;
 }
 
-void QB2Body::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
-{
-    SetPos(event->scenePos());
-}
-
-void QB2Body::mousePressEvent(QGraphicsSceneMouseEvent* event)
-{
-    SetAwake(false);
-}
-
-void QB2Body::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
-{
-    SetAwake(true);
-}
-
 b2Fixture* QB2Body::CreateB2Fixture(const b2FixtureDef& fixtureDef)
 {
+    QMutexLocker ml(&mutex_);
     return b2body_->CreateFixture(&fixtureDef);
 }
 
 void QB2Body::DestroyB2Fixture(b2Fixture* fixture)
 {
+    QMutexLocker ml(&mutex_);
     b2body_->DestroyFixture(fixture);
 }
 

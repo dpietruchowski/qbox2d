@@ -1,5 +1,6 @@
 #include "QB2World.h"
 
+#include <QMutexLocker>
 #include <QTimerEvent>
 #include <QThread>
 #include <QDebug>
@@ -45,22 +46,26 @@ void QB2World::Update()
 
 b2Body* QB2World::CreateB2Body(const b2BodyDef& bodyDef)
 {
+    QMutexLocker ml(&mutex_);
     return b2world_.CreateBody(&bodyDef);
 }
 
 void QB2World::DestroyB2Body(b2Body* body)
 {
+    QMutexLocker ml(&mutex_);
     b2world_.DestroyBody(body);
 }
 
 void QB2World::AddBody(QB2Body& body)
 {
+    QMutexLocker ml(&mutex_);
     bodies_.Add(body);
     emit BodyAdded(&body);
 }
 
 void QB2World::RemoveBody(QB2Body& body)
 {
+    QMutexLocker ml(&mutex_);
     emit BodyRemoved(&body);
     bodies_.Remove(body);
 }

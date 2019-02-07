@@ -1,6 +1,7 @@
 #ifndef QB2WORLD_H
 #define QB2WORLD_H
 
+#include <QMutex>
 #include <QObject>
 #include <Box2D/Box2D.h>
 
@@ -19,6 +20,9 @@ public:
 
     void Init();
     void Start();
+
+    /// B2World api
+    ///
 
 signals:
     void BodyAdded(QB2Body* body);
@@ -41,6 +45,7 @@ private:
 private:
     b2World b2world_;
     ListRef<QB2Body> bodies_;
+    QMutex mutex_;
 };
 
 #endif // QB2WORLD_H
