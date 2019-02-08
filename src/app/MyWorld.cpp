@@ -21,12 +21,12 @@ void MyCircle::OnUpdate()
 }
 
 MyGround::MyGround(QB2World& world): QB2Body(world),
-    fixture(std::vector<b2Vec2>{
-                {0, 0},
-                {0, 2},
-                {500, 0},
-                {500, 2}
-            },
+    fixture(QPolygonF(
+                {QPointF{0, 0},
+                QPointF{0, 10},
+                QPointF{500, 0},
+                QPointF{500, 10}}
+            ),
             b2FixtureParams{0.1, 1, 1}, *this)
 {
     SetType(b2_staticBody);

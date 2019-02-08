@@ -14,6 +14,8 @@ public:
     QB2CircleFixture(float32 radius,
                      const b2FixtureParams& params,
                      QB2Body& body);
+    QB2CircleFixture(float32 radius,
+                     QB2Body& body);
 
     void Paint(QPainter* painter) const override;
     QRectF boundingRect() const override;
