@@ -20,7 +20,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QB2WorldScene ws;
+    RocketLander world_;
 };
 
 #endif // MAINWINDOW_H

@@ -1,5 +1,7 @@
 #include "QB2EventFilter.h"
 
+#include "QB2World.h"
+
 QB2EventFilter::QB2EventFilter(QB2World& world): world_(world)
 {
 

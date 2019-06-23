@@ -4,11 +4,16 @@
 #include <map>
 #include <QEvent>
 #include <QMutex>
+#include <QTimer>
 #include <QObject>
+#include <QThread>
 #include <Box2D/Box2D.h>
 
 #include "utils/ListRef.h"
 #include "qbox2d_global.h"
+
+#include "QB2Scene.h"
+#include "QB2EventFilter.h"
 
 class QB2Body;
 class QKeyEvent;
@@ -21,24 +26,21 @@ class QBOX2DSHARED_EXPORT QB2World : public QObject
     friend class QB2Scene;
 public:
     explicit QB2World(const b2Vec2& gravity, QObject *parent = nullptr);
-    virtual ~QB2World() = default;
+    virtual ~QB2World() override;
 
-    void Init();
     void Start();
+    void Stop();
+
+    QB2Scene& GetScene();
+
+signals:
+    void BodyUpdated(QB2Body*);
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
 
     virtual bool KeyPressEvent(QKeyEvent *keyEvent);
     virtual bool KeyReleaseEvent(QKeyEvent *keyEvent);
-
-signals:
-    void BodyAdded(QB2Body* body);
-    void BodyRemoved(QB2Body* body);
-    void BodyUpdated(QB2Body* body);
-
-protected:
-    void timerEvent(QTimerEvent *event) override;
 
 private:
     void Step();
@@ -55,8 +57,12 @@ private:
 
 private:
     b2World b2world_;
+    QB2Scene scene_;
     ListRef<QB2Body> bodies_;
+    QTimer timer_;
+    QThread thread_;
     QMutex mutex_;
+    QB2EventFilter eventFilter_;
 };
 
 #endif // QB2WORLD_H

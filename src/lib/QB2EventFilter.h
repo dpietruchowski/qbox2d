@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "QB2World.h"
+class QB2World;
 
 class QB2EventFilter : public QObject
 {
