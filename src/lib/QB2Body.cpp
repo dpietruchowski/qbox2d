@@ -176,6 +176,12 @@ void QB2Body::SetFixedRotation(bool fixedRotation)
     b2body_->SetFixedRotation(fixedRotation);
 }
 
+void QB2Body::ResetMassData()
+{
+    QMutexLocker ml(&scene_.GetMutex());
+    b2body_->ResetMassData();
+}
+
 QPointF QB2Body::GetPos() const
 {
     b2Vec2 pos = b2body_->GetPosition();

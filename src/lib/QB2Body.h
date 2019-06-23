@@ -49,6 +49,8 @@ public:
     void SetActive(bool active);
     void SetFixedRotation(bool fixedRotation);
 
+    void ResetMassData();
+
     QPointF GetPos() const;
     float GetAngle() const;
     QVector2D GetLinearVelocity() const;
