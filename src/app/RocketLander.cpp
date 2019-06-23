@@ -2,8 +2,8 @@
 
 #include <QKeyEvent>
 
-RocketLander::RocketLander() : QB2World({0, 0.1}), platforms_{},
-    ground_(QRectF({0, 200}, QSizeF(500, 2)), *this), rocket_(*this)
+RocketLander::RocketLander() : QB2World({0, -50}), platforms_{},
+    ground_(QRectF({0, -200}, QSizeF(500, 2)), *this), rocket_(*this)
 {
     rocket_.SetSleepingAllowed(false);
 }
