@@ -1,0 +1,92 @@
+@startuml
+
+hide empty members
+
+QB2Fixture <|-- QB2CircleFixture
+QB2Fixture <|-- QB2PolygonFixture
+
+class QB2Fixture {
+    -b2Fixture* b2fixture_
+    -QB2Body& body_
+    --
+    --box2d getters and setters--
+    --
+    +{abstract} void Paint(QPainter* painter) const
+    +{abstract} QRectF boundingRect() const
+}
+
+class QB2CircleFixture {
+    +{abstract} void Paint(QPainter* painter) const
+    +{abstract} QRectF boundingRect() const
+    -QRectF ellipse_
+}
+
+class QB2PolygonFixture {
+    +{abstract} void Paint(QPainter* painter) const
+    +{abstract} QRectF boundingRect() const
+    -QPolygonF polygon_
+}
+
+'////////////////////////////////
+
+QB2Body o-- QB2Fixture
+
+QGraphicsItem <|-- QB2Body
+QGraphicsScene <|-- QB2Scene
+QB2World o-- QB2Body
+QB2World o-- QB2Scene
+QB2World --> QThread
+QB2World --> QMutex
+QB2World --> QTimer
+
+class QB2Body {
+    -b2Body* b2body_
+    -QB2World& scene_
+    -ListRef<QB2Fixture> fixtures_
+    --
+    --box2d getters and setters--
+    --
+    +void AddFixture(QB2Fixture& fixture);
+    +void RemoveFixture(QB2Fixture& fixture);
+    +void Update();
+    --
+    +{abstract} void paint(QPainter* painter) const
+    +{abstract} QRectF boundingRect() const
+    +{abstract} void OnUpdate()
+    --
+    -b2Fixture* CreateB2Fixture(const b2FixtureDef& fixtureDef);
+    -void DestroyB2Fixture(b2Fixture* fixture);
+    -void Create(const b2BodyDef& bodyDef);
+    -void Delete();
+}
+
+class QB2World {
+    -b2World b2world_;
+    -ListRef<QB2Body> bodies_;
+    -QMutex mutex_;
+    --
+    +void Init();
+    +void Start();
+    --
+    bool eventFilter(QObject *obj, QEvent *event) override;
+    {abstract} bool KeyPressEvent(QKeyEvent *keyEvent);
+    {abstract} bool KeyReleaseEvent(QKeyEvent *keyEvent);
+    {abstract} void timerEvent(QTimerEvent *event) override;
+    --
+    -void Step();
+    -void Update();
+    -{abstract} void OnUpdate()
+    --
+    -b2Body* CreateB2Body(const b2BodyDef& bodyDef);
+    -void DestroyB2Body(b2Body* body);
+    -void AddBody(QB2Body& body);
+    -void RemoveBody(QB2Body& body);
+}
+
+class QB2Scene {
+    +void AddBody(QB2Body* body);
+    +void RemoveBody(QB2Body* body);
+    +void UpdateBody(QB2Body* body);
+}
+
+@enduml
