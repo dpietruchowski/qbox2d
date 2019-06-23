@@ -15,6 +15,7 @@ QB2Fixture::QB2Fixture(const b2Shape* shape, QB2Body& body)
 {
     b2FixtureDef fixtureDef;
     fixtureDef.shape = shape;
+    fixtureDef.density = 0.001f;
     Create(fixtureDef);
     delete shape;
 }
