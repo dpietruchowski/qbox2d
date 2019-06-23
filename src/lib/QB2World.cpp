@@ -2,6 +2,8 @@
 
 #include <QMutexLocker>
 #include <QTimerEvent>
+#include <QKeyEvent>
+#include <QEvent>
 #include <QThread>
 #include <QDebug>
 
@@ -13,6 +15,7 @@ QB2World::QB2World(const b2Vec2& gravity, QObject *parent) : QObject(parent), b2
 
 void QB2World::Step()
 {
+    QMutexLocker ml(&mutex_);
     b2world_.Step(1, 8, 3);
     Update();
 }
@@ -30,7 +33,27 @@ void QB2World::Start()
     startTimer(1000/60);
 }
 
-void QB2World::timerEvent(QTimerEvent* event)
+bool QB2World::eventFilter(QObject* obj, QEvent* event)
+{
+    QMutexLocker ml(&mutex_);
+    switch(event->type()) {
+        case QEvent::KeyPress: return KeyPressEvent(dynamic_cast<QKeyEvent*>(event));
+        case QEvent::KeyRelease: return KeyReleaseEvent(dynamic_cast<QKeyEvent*>(event));
+        default: return QObject::eventFilter(obj, event);
+    }
+}
+
+bool QB2World::KeyPressEvent(QKeyEvent*)
+{
+    return false;
+}
+
+bool QB2World::KeyReleaseEvent(QKeyEvent* keyEvent)
+{
+    return false;
+}
+
+void QB2World::timerEvent(QTimerEvent*)
 {
     Step();
 }

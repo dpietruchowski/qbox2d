@@ -32,11 +32,17 @@ LIBS += -L../lib -lqbox2d
 SOURCES += \
     main.cpp \
     MainWindow.cpp \
-    MyWorld.cpp
+    MyWorld.cpp \
+    Platform.cpp \
+    Rocket.cpp \
+    RocketLander.cpp
 
 HEADERS += \
     MainWindow.h \
-    MyWorld.h
+    MyWorld.h \
+    Platform.h \
+    Rocket.h \
+    RocketLander.h
 
 
 unix {

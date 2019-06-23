@@ -6,10 +6,8 @@
 
 QB2WorldScene::QB2WorldScene(std::unique_ptr<QB2World> world): world_(std::move(world))
 {
-    world_->moveToThread(&worldThread_);
-    ConnectWorldScene();
+    AfterWorldSet();
     connect(&worldThread_, &QThread::started, world_.get(), &QB2World::Start);
-    qDebug() << "Thread started thread id: " << QThread::currentThreadId();
     worldThread_.start();
 }
 
@@ -22,12 +20,18 @@ QB2Scene& QB2WorldScene::GetScene()
     return scene_;
 }
 
+void QB2WorldScene::AfterWorldSet()
+{
+    eventFilter_ = std::make_unique<QB2EventFilter>(*world_);
+    scene_.installEventFilter(eventFilter_.get());
+    world_->moveToThread(&worldThread_);
+    ConnectWorldScene();
+}
+
 void QB2WorldScene::SetWorld(std::unique_ptr<QB2World> world)
 {
     world_ = std::move(world);
-
-    ConnectWorldScene();
-    world_->Init();
+    AfterWorldSet();
 }
 
 void QB2WorldScene::ConnectWorldScene()

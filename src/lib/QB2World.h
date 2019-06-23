@@ -1,6 +1,8 @@
 #ifndef QB2WORLD_H
 #define QB2WORLD_H
 
+#include <map>
+#include <QEvent>
 #include <QMutex>
 #include <QObject>
 #include <Box2D/Box2D.h>
@@ -9,11 +11,14 @@
 #include "qbox2d_global.h"
 
 class QB2Body;
+class QKeyEvent;
 
 class QBOX2DSHARED_EXPORT QB2World : public QObject
 {
     Q_OBJECT
     friend class QB2Body;
+    friend class QB2EventFilter;
+    friend class QB2Scene;
 public:
     explicit QB2World(const b2Vec2& gravity, QObject *parent = nullptr);
     virtual ~QB2World() = default;
@@ -21,8 +26,11 @@ public:
     void Init();
     void Start();
 
-    /// B2World api
-    ///
+protected:
+    bool eventFilter(QObject *obj, QEvent *event) override;
+
+    virtual bool KeyPressEvent(QKeyEvent *keyEvent);
+    virtual bool KeyReleaseEvent(QKeyEvent *keyEvent);
 
 signals:
     void BodyAdded(QB2Body* body);

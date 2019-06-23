@@ -61,7 +61,7 @@ void QB2Body::SetPos(QPointF pos)
 
 void QB2Body::SetPos(float x, float y)
 {
-    QMutexLocker ml(&mutex_);
+    //QMutexLocker ml(&mutex_);
     b2body_->SetTransform({x, y}, b2body_->GetAngle());
 }
 
@@ -87,7 +87,9 @@ void QB2Body::SetAngularVelocity(float omega)
 void QB2Body::ApplyForce(const QVector2D& force, const QPointF& point, bool wake)
 {
     QMutexLocker ml(&mutex_);
-    b2body_->ApplyForce({force.x(), force.y()}, {point.x(), point.y()}, wake);
+    b2body_->ApplyForce({force.x(), force.y()},
+                        b2body_->GetWorldPoint({point.x(), point.y()}),
+                        wake);
 }
 
 void QB2Body::ApplyForceToCenter(const QVector2D& force, bool wake)
@@ -106,6 +108,12 @@ void QB2Body::ApplyLinearImpulse(const QVector2D& impulse, const QPointF& point,
 {
     QMutexLocker ml(&mutex_);
     b2body_->ApplyLinearImpulse({impulse.x(), impulse.y()}, {point.x(), point.y()}, wake);
+}
+
+void QB2Body::ApplyLinearImpulseToCenter(const QVector2D& impulse, bool wake)
+{
+    QMutexLocker ml(&mutex_);
+    b2body_->ApplyLinearImpulseToCenter({impulse.x(), impulse.y()}, wake);
 }
 
 void QB2Body::ApplyAngularImpulse(float impulse, bool wake)
@@ -152,7 +160,7 @@ void QB2Body::SetSleepingAllowed(bool sleepingAllowed)
 
 void QB2Body::SetAwake(bool awake)
 {
-    QMutexLocker ml(&mutex_);
+    //QMutexLocker ml(&mutex_);
     b2body_->SetAwake(awake);
 }
 
