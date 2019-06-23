@@ -17,6 +17,7 @@ void QB2World::Step()
 {
     QMutexLocker ml(&mutex_);
     b2world_.Step(1, 8, 3);
+    ml.unlock();
     Update();
 }
 
@@ -35,7 +36,6 @@ void QB2World::Start()
 
 bool QB2World::eventFilter(QObject* obj, QEvent* event)
 {
-    QMutexLocker ml(&mutex_);
     switch(event->type()) {
         case QEvent::KeyPress: return KeyPressEvent(dynamic_cast<QKeyEvent*>(event));
         case QEvent::KeyRelease: return KeyReleaseEvent(dynamic_cast<QKeyEvent*>(event));
@@ -91,4 +91,9 @@ void QB2World::RemoveBody(QB2Body& body)
     QMutexLocker ml(&mutex_);
     emit BodyRemoved(&body);
     bodies_.Remove(body);
+}
+
+QMutex& QB2World::GetMutex()
+{
+    return mutex_;
 }

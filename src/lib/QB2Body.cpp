@@ -43,13 +43,13 @@ QB2Body::~QB2Body()
 
 void QB2Body::AddFixture(QB2Fixture& fixture)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&scene_.GetMutex());
     fixtures_.Add(fixture);
 }
 
 void QB2Body::RemoveFixture(QB2Fixture& fixture)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&scene_.GetMutex());
     fixtures_.Remove(fixture);
 }
 
@@ -61,32 +61,32 @@ void QB2Body::SetPos(QPointF pos)
 
 void QB2Body::SetPos(float x, float y)
 {
-    //QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&scene_.GetMutex());
     b2body_->SetTransform({x, y}, b2body_->GetAngle());
 }
 
 void QB2Body::SetAngle(float angle)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&scene_.GetMutex());
     QPointF pos = GetPos();
     b2body_->SetTransform({pos.x(), pos.y()}, qDegreesToRadians(angle));
 }
 
 void QB2Body::SetLinearVelocity(const QVector2D& velocity)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&scene_.GetMutex());
     b2body_->SetLinearVelocity({velocity.x(), velocity.y()});
 }
 
 void QB2Body::SetAngularVelocity(float omega)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&scene_.GetMutex());
     b2body_->SetAngularVelocity(omega);
 }
 
 void QB2Body::ApplyForce(const QVector2D& force, const QPointF& point, bool wake)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&scene_.GetMutex());
     b2body_->ApplyForce({force.x(), force.y()},
                         b2body_->GetWorldPoint({point.x(), point.y()}),
                         wake);
@@ -94,85 +94,85 @@ void QB2Body::ApplyForce(const QVector2D& force, const QPointF& point, bool wake
 
 void QB2Body::ApplyForceToCenter(const QVector2D& force, bool wake)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&scene_.GetMutex());
     b2body_->ApplyForceToCenter({force.x(), force.y()}, wake);
 }
 
 void QB2Body::ApplyTorque(float torque, bool wake)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&scene_.GetMutex());
     b2body_->ApplyTorque(torque, wake);
 }
 
 void QB2Body::ApplyLinearImpulse(const QVector2D& impulse, const QPointF& point, bool wake)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&scene_.GetMutex());
     b2body_->ApplyLinearImpulse({impulse.x(), impulse.y()}, {point.x(), point.y()}, wake);
 }
 
 void QB2Body::ApplyLinearImpulseToCenter(const QVector2D& impulse, bool wake)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&scene_.GetMutex());
     b2body_->ApplyLinearImpulseToCenter({impulse.x(), impulse.y()}, wake);
 }
 
 void QB2Body::ApplyAngularImpulse(float impulse, bool wake)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&scene_.GetMutex());
     b2body_->ApplyAngularImpulse(impulse, wake);
 }
 
 void QB2Body::SetLinearDamping(float linearDamping)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&scene_.GetMutex());
     b2body_->SetLinearDamping(linearDamping);
 }
 
 void QB2Body::SetAngularDamping(float angularDamping)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&scene_.GetMutex());
     b2body_->SetAngularDamping(angularDamping);
 }
 
 void QB2Body::SetGravityScale(float scale)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&scene_.GetMutex());
     b2body_->SetGravityScale(scale);
 }
 
 void QB2Body::SetType(b2BodyType type)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&scene_.GetMutex());
     b2body_->SetType(type);
 }
 
 void QB2Body::SetBullet(bool bullet)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&scene_.GetMutex());
     b2body_->SetBullet(bullet);
 }
 
 void QB2Body::SetSleepingAllowed(bool sleepingAllowed)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&scene_.GetMutex());
     b2body_->SetSleepingAllowed(sleepingAllowed);
 }
 
 void QB2Body::SetAwake(bool awake)
 {
-    //QMutexLocker ml(&mutex_);
+    //QMutexLocker ml(&scene_.GetMutex());
     b2body_->SetAwake(awake);
 }
 
 void QB2Body::SetActive(bool active)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&scene_.GetMutex());
     b2body_->SetActive(active);
 }
 
 void QB2Body::SetFixedRotation(bool fixedRotation)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&scene_.GetMutex());
     b2body_->SetFixedRotation(fixedRotation);
 }
 
@@ -282,13 +282,13 @@ QRectF QB2Body::boundingRect() const
 
 b2Fixture* QB2Body::CreateB2Fixture(const b2FixtureDef& fixtureDef)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&scene_.GetMutex());
     return b2body_->CreateFixture(&fixtureDef);
 }
 
 void QB2Body::DestroyB2Fixture(b2Fixture* fixture)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&scene_.GetMutex());
     b2body_->DestroyFixture(fixture);
 }
 
@@ -305,4 +305,9 @@ void QB2Body::Delete()
     if (b2body_)
         scene_.DestroyB2Body(b2body_);
     scene_.RemoveBody(*this);
+}
+
+QMutex& QB2Body::GetMutex()
+{
+    return scene_.GetMutex();
 }

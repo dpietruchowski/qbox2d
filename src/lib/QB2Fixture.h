@@ -1,7 +1,6 @@
 #ifndef QB2FIXTURE_H
 #define QB2FIXTURE_H
 
-#include <QMutex>
 #include <QRect>
 #include <Box2D/Box2D.h>
 
@@ -53,7 +52,6 @@ protected:
 private:
     b2Fixture* b2fixture_;
     QB2Body& body_;
-    QMutex mutex_;
 };
 
 #endif // QB2FIXTURE_H

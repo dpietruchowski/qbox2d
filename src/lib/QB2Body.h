@@ -78,11 +78,12 @@ private:
     void Create(const b2BodyDef& bodyDef);
     void Delete();
 
+    QMutex& GetMutex();
+
 private:
     b2Body* b2body_;
     QB2World& scene_;
     ListRef<QB2Fixture> fixtures_;
-    QMutex mutex_;
 };
 
 #endif // QB2BODY_H

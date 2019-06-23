@@ -50,6 +50,9 @@ private:
     void DestroyB2Body(b2Body* body);
     void AddBody(QB2Body& body);
     void RemoveBody(QB2Body& body);
+
+    QMutex& GetMutex();
+
 private:
     b2World b2world_;
     ListRef<QB2Body> bodies_;

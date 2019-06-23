@@ -26,7 +26,7 @@ QB2Fixture::~QB2Fixture()
 
 void QB2Fixture::SetFilterData(const b2Filter& filter)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&body_.GetMutex());
     b2fixture_->SetFilterData(filter);
 }
 
@@ -44,19 +44,19 @@ void QB2Fixture::SetParams(float32 friction, float32 restitution, float32 densti
 
 void QB2Fixture::SetFriction(float32 friction)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&body_.GetMutex());
     b2fixture_->SetFriction(friction);
 }
 
 void QB2Fixture::SetRestitution(float32 restitution)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&body_.GetMutex());
     b2fixture_->SetRestitution(restitution);
 }
 
 void QB2Fixture::SetDensity(float32 denstity)
 {
-    QMutexLocker ml(&mutex_);
+    QMutexLocker ml(&body_.GetMutex());
     b2fixture_->SetDensity(denstity);
 }
 
