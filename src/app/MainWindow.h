@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "QB2WorldScene.h"
 #include "MyWorld.h"
 #include "RocketLander.h"
 
