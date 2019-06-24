@@ -4,14 +4,11 @@ CONFIG += ordered
 
 # All the projects in your application are sub-projects of your solution
 SUBDIRS = \
-        lib \
-        app \
-        multiplayer-app \
+        server \
+        client
 
-lib.file = src/lib/qbox2d-lib.pro
-app.file = src/app/qbox2d-app.pro
-multiplayer-app.file = src/multiplayer-app/qbox2d-multiplayer-app.pro
+server.file = server/qbox2d-app-server.pro
+client.file = client/qbox2d-app-client.pro
 
 # Use .depends to specify that a project depends on another.
 app.depends = lib
-multiplayer-app.depends = lib
