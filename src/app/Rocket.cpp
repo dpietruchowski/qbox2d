@@ -1,14 +1,21 @@
 #include "Rocket.h"
 
+namespace {
+
+const QPolygonF rocketShape = QPolygonF({
+            QPoint{0, 30},
+        QPoint{-10, 20}, QPoint{10, 20},
+        QPoint{-10, -20}, QPoint{10, -20}});
+
+}
+
 Rocket::Rocket(QB2World& world)
     : QB2Body(world),
-      fixture_(QPolygonF({
-                        QPoint{0, 30},
-                    QPoint{-10, 20}, QPoint{10, 20},
-                    QPoint{-10, -20}, QPoint{10, -20}
-                    }), *this)
+      fixture_(rocketShape, *this)
 {
     SetType(b2_dynamicBody);
-    SetPos(10, 0);
-    fixture_.SetDensity(0.5);
+    SetPos(0, 0);
+    fixture_.SetDensity(5);
+    fixture_.SetFriction(10);
+    fixture_.SetRestitution(0.1f);
 }

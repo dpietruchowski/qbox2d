@@ -65,6 +65,8 @@ public:
     bool IsActive() const;
     bool IsFixedRotation() const;
 
+    QVector2D MapForceToLocal(const QVector2D& force) const;
+
     void Update();
 
     virtual void OnUpdate() {}
@@ -81,6 +83,9 @@ private:
     void Delete();
 
     QMutex& GetMutex();
+
+private:
+    float MapAngle360(float angle) const;
 
 private:
     b2Body* b2body_;

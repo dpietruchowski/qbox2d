@@ -11,7 +11,9 @@ class RocketLander : public QB2World
 {
 public:
     RocketLander();
-    QVector2D force;
+    bool leftEngine = false;
+    bool rightEngine = false;
+    bool bottomEngine = false;
     QVector2D velocity;
     QPointF position;
 
@@ -23,7 +25,7 @@ private:
     void OnUpdate() override;
 
 private:
-    std::vector<Platform> platforms_;
+    std::vector<Platform*> platforms_;
     Platform ground_;
     Rocket rocket_;
     bool applyForce;

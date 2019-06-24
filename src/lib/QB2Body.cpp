@@ -1,5 +1,7 @@
 #include "QB2Body.h"
 
+#include <math.h>
+
 #include <QApplication>
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
@@ -67,6 +69,7 @@ void QB2Body::SetPos(float x, float y)
 
 void QB2Body::SetAngle(float angle)
 {
+    angle = MapAngle360(angle);
     QMutexLocker ml(&scene_.GetMutex());
     QPointF pos = GetPos();
     b2body_->SetTransform({pos.x(), pos.y()}, qDegreesToRadians(angle));
@@ -190,7 +193,9 @@ QPointF QB2Body::GetPos() const
 
 float QB2Body::GetAngle() const
 {
-    return qRadiansToDegrees(b2body_->GetAngle());
+    float angle = qRadiansToDegrees(b2body_->GetAngle());
+    angle = MapAngle360(angle);
+    return angle;
 }
 
 QVector2D QB2Body::GetLinearVelocity() const
@@ -247,6 +252,15 @@ bool QB2Body::IsActive() const
 bool QB2Body::IsFixedRotation() const
 {
     return b2body_->IsFixedRotation();
+}
+
+QVector2D QB2Body::MapForceToLocal(const QVector2D& force) const
+{
+    QPointF point = {force.x(), force.y()};
+    QTransform transform;
+    transform.rotate(GetAngle());
+    auto p = transform.map(point);
+    return QVector2D(p.x(), p.y());
 }
 
 void QB2Body::Update()
@@ -316,4 +330,12 @@ void QB2Body::Delete()
 QMutex& QB2Body::GetMutex()
 {
     return scene_.GetMutex();
+}
+
+float QB2Body::MapAngle360(float angle) const
+{
+    angle = std::fmod(angle, 360.f);
+    if (angle < 0)
+        angle += 360;
+    return angle;
 }
