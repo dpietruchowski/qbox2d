@@ -10,12 +10,11 @@
 #include "QB2Body.h"
 
 QB2World::QB2World(const b2Vec2& gravity, QObject *parent)
-    : QObject(parent), b2world_(gravity), eventFilter_(*this)
+    : QObject(parent), b2world_(gravity)
 {
     moveToThread(&thread_);
     connect(&timer_, &QTimer::timeout, this, &QB2World::Step);
     connect(this, &QB2World::BodyUpdated, &scene_, &QB2Scene::UpdateBody);
-    scene_.installEventFilter(&eventFilter_);
 }
 
 QB2World::~QB2World()
@@ -50,23 +49,10 @@ QB2Scene& QB2World::GetScene()
     return scene_;
 }
 
-bool QB2World::eventFilter(QObject* obj, QEvent* event)
+void QB2World::InstallEventFilter(QB2EventFilter& eventFilter)
 {
-    switch(event->type()) {
-        case QEvent::KeyPress: return KeyPressEvent(dynamic_cast<QKeyEvent*>(event));
-        case QEvent::KeyRelease: return KeyReleaseEvent(dynamic_cast<QKeyEvent*>(event));
-        default: return QObject::eventFilter(obj, event);
-    }
-}
-
-bool QB2World::KeyPressEvent(QKeyEvent*)
-{
-    return false;
-}
-
-bool QB2World::KeyReleaseEvent(QKeyEvent*)
-{
-    return false;
+    scene_.installEventFilter(&eventFilter);
+    connect(this, &QB2World::Updated, &eventFilter, &QB2EventFilter::Update);
 }
 
 void QB2World::Update()
@@ -75,6 +61,7 @@ void QB2World::Update()
         emit BodyUpdated(&body);
         body.OnUpdate();
     }
+    emit Updated();
     OnUpdate();
 }
 

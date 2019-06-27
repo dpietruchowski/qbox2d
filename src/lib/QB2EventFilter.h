@@ -3,18 +3,23 @@
 
 #include <QObject>
 
-class QB2World;
+class QKeyEvent;
 
 class QB2EventFilter : public QObject
 {
 public:
-    QB2EventFilter(QB2World& world);
+    QB2EventFilter();
+
+   void Update();
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
 
+    virtual bool KeyPressEvent(QKeyEvent *keyEvent) = 0;
+    virtual bool KeyReleaseEvent(QKeyEvent *keyEvent) = 0;
+
 private:
-    QB2World& world_;
+    virtual void OnUpdate() = 0;
 };
 
 #endif // QB2EVENTFILTER_H

@@ -33,19 +33,16 @@ public:
 
     QB2Scene& GetScene();
 
+    void InstallEventFilter(QB2EventFilter& eventFilter);
+
 signals:
+    void Updated();
     void BodyUpdated(QB2Body*);
-
-protected:
-    bool eventFilter(QObject *obj, QEvent *event) override;
-
-    virtual bool KeyPressEvent(QKeyEvent *keyEvent);
-    virtual bool KeyReleaseEvent(QKeyEvent *keyEvent);
 
 private:
     void Step();
     void Update();
-    virtual void OnUpdate() = 0;
+    virtual void OnUpdate() {}
 
 private:
     b2Body* CreateB2Body(const b2BodyDef& bodyDef);
@@ -62,7 +59,6 @@ private:
     QTimer timer_;
     QThread thread_;
     QMutex mutex_;
-    QB2EventFilter eventFilter_;
 };
 
 #endif // QB2WORLD_H
