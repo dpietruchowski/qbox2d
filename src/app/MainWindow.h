@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include "MyWorld.h"
-#include "RocketLander.h"
+#include "RocketLanderWorld.h"
 
 namespace Ui {
 class MainWindow;
@@ -19,7 +19,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    RocketLander world_;
+    RocketLanderWorld world_;
 };
 
 #endif // MAINWINDOW_H

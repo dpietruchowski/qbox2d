@@ -1,34 +1,27 @@
 #ifndef ROCKETLANDER_H
 #define ROCKETLANDER_H
 
-#include <vector>
-#include <QVector2D>
-#include "QB2World.h"
-#include "Rocket.h"
-#include "Platform.h"
+#include "QB2EventFilter.h"
 
-class RocketLander : public QB2World
+class Rocket;
+
+class RocketLander: public QB2EventFilter
 {
 public:
-    RocketLander();
-    bool leftEngine = false;
-    bool rightEngine = false;
-    bool bottomEngine = false;
-    QVector2D velocity;
-    QPointF position;
+    RocketLander(Rocket& rocket);
 
 protected:
     bool KeyPressEvent(QKeyEvent* event) override;
     bool KeyReleaseEvent(QKeyEvent* event) override;
 
 private:
-    void OnUpdate() override;
+    void OnUpdate();
 
 private:
-    std::vector<Platform*> platforms_;
-    Platform ground_;
-    Rocket rocket_;
-    bool applyForce;
+    Rocket& rocket_;
+    bool leftEngine = false;
+    bool rightEngine = false;
+    bool bottomEngine = false;
 };
 
 #endif // ROCKETLANDER_H

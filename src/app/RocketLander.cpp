@@ -1,23 +1,18 @@
 #include "RocketLander.h"
 
-#include <QLineF>
-#include <QVector2D>
+#include "Rocket.h"
 
 #include <QKeyEvent>
-#include <QDebug>
 
-RocketLander::RocketLander() : QB2World({0, -60}), platforms_{},
-    ground_(QRectF({-20, -160}, QSizeF(500, 2)), *this), rocket_(*this)
+RocketLander::RocketLander(Rocket& rocket): rocket_(rocket)
 {
-    platforms_.push_back(new Platform(QRectF({200, 0}, QSizeF(100, 2)), *this));
-    rocket_.SetSleepingAllowed(false);
+
 }
 
 bool RocketLander::KeyPressEvent(QKeyEvent* event)
 {
     if (event->isAutoRepeat())
         return true;
-    applyForce = true;
     switch(event->key()) {
         case Qt::Key_Up: {
             bottomEngine = true;
@@ -84,6 +79,7 @@ bool RocketLander::KeyReleaseEvent(QKeyEvent* event)
     }
     return true;
 }
+
 
 void RocketLander::OnUpdate()
 {

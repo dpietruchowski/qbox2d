@@ -35,6 +35,7 @@ SOURCES += \
     MyWorld.cpp \
     Platform.cpp \
     Rocket.cpp \
+    RocketLanderWorld.cpp \
     RocketLander.cpp
 
 HEADERS += \
@@ -42,6 +43,7 @@ HEADERS += \
     MyWorld.h \
     Platform.h \
     Rocket.h \
+    RocketLanderWorld.h \
     RocketLander.h
 
 
