@@ -4,6 +4,7 @@
 #include <memory>
 #include <QMutex>
 #include <QGraphicsItem>
+#include <QVector2D>
 #include <Box2D/Box2D.h>
 
 #include "utils/ListRef.h"
@@ -18,10 +19,12 @@ class QBOX2DSHARED_EXPORT QB2Body : public QGraphicsItem
 {
     friend class QB2Fixture;
 public:
-    explicit QB2Body(QB2World& scene, QGraphicsItem  *parent = nullptr);
-    explicit QB2Body(const b2BodyDef& bodyDef, QB2World& scene, QGraphicsItem  *parent = nullptr);
-    explicit QB2Body(const QPointF& position, QB2World& scene, QGraphicsItem  *parent = nullptr);
+    explicit QB2Body(int id, QB2World& scene, QGraphicsItem  *parent = nullptr);
+    explicit QB2Body(int id, const b2BodyDef& bodyDef, QB2World& scene, QGraphicsItem  *parent = nullptr);
+    explicit QB2Body(int id, const QPointF& position, QB2World& scene, QGraphicsItem  *parent = nullptr);
     ~QB2Body() override;
+
+    int GetId() const;
 
     void AddFixture(QB2Fixture& fixture);
     void RemoveFixture(QB2Fixture& fixture);
@@ -88,9 +91,12 @@ private:
     float MapAngle360(float angle) const;
 
 private:
+    int id_ = -1;
     b2Body* b2body_;
     QB2World& scene_;
     ListRef<QB2Fixture> fixtures_;
 };
+
+Q_DECLARE_METATYPE(QB2Body*);
 
 #endif // QB2BODY_H

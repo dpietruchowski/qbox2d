@@ -24,6 +24,19 @@ QB2World::~QB2World()
     while(!thread_.isFinished()) { /* Wait for finish */ }
 }
 
+QB2Body* QB2World::GetBody(int id)
+{
+    auto iter = std::find_if(bodies_.begin(), bodies_.end(),
+                 [id](QB2Body& body) {
+        return body.GetId() == id;
+    });
+
+    if (iter != bodies_.end())
+        return &(iter->get());
+
+    return nullptr;
+}
+
 void QB2World::Step()
 {
     QMutexLocker ml(&mutex_);
@@ -82,6 +95,7 @@ void QB2World::AddBody(QB2Body& body)
     QMutexLocker ml(&mutex_);
     bodies_.Add(body);
     scene_.AddBody(&body);
+    emit BodyAdded(&body);
 }
 
 void QB2World::RemoveBody(QB2Body& body)

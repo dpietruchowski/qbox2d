@@ -9,8 +9,8 @@ const QPolygonF rocketShape = QPolygonF({
 
 }
 
-Rocket::Rocket(QB2World& world)
-    : QB2Body(world),
+Rocket::Rocket(int id, QB2World& world)
+    : QB2Body(id, world),
       fixture_(rocketShape, *this)
 {
     SetType(b2_dynamicBody);

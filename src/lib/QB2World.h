@@ -28,6 +28,8 @@ public:
     explicit QB2World(const b2Vec2& gravity, QObject *parent = nullptr);
     virtual ~QB2World() override;
 
+    QB2Body* GetBody(int id);
+
     void Start();
     void Stop();
 
@@ -38,6 +40,7 @@ public:
 signals:
     void Updated();
     void BodyUpdated(QB2Body*);
+    void BodyAdded(QB2Body*);
 
 private:
     void Step();

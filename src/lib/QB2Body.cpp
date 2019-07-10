@@ -16,22 +16,22 @@
 #include "QB2PolygonFixture.h"
 #include "QB2World.h"
 
-QB2Body::QB2Body(QB2World& scene, QGraphicsItem *parent)
-    : QGraphicsItem(parent), b2body_(nullptr), scene_(scene)
+QB2Body::QB2Body(int id, QB2World& scene, QGraphicsItem *parent)
+    : QGraphicsItem(parent), id_(id), b2body_(nullptr), scene_(scene)
 {
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
     Create(bodyDef);
 }
 
-QB2Body::QB2Body(const b2BodyDef& bodyDef, QB2World& scene, QGraphicsItem* parent)
-    : QGraphicsItem(parent), b2body_(nullptr), scene_(scene)
+QB2Body::QB2Body(int id, const b2BodyDef& bodyDef, QB2World& scene, QGraphicsItem* parent)
+    : QGraphicsItem(parent), id_(id), b2body_(nullptr), scene_(scene)
 {
     Create(bodyDef);
 }
 
-QB2Body::QB2Body(const QPointF& position, QB2World& scene, QGraphicsItem* parent)
-    : QGraphicsItem(parent), b2body_(nullptr), scene_(scene)
+QB2Body::QB2Body(int id, const QPointF& position, QB2World& scene, QGraphicsItem* parent)
+    : QGraphicsItem(parent), id_(id), b2body_(nullptr), scene_(scene)
 {
     b2BodyDef bodyDef;
     bodyDef.position = {position.x(), position.y()};
@@ -41,6 +41,11 @@ QB2Body::QB2Body(const QPointF& position, QB2World& scene, QGraphicsItem* parent
 QB2Body::~QB2Body()
 {
     Delete();
+}
+
+int QB2Body::GetId() const
+{
+    return id_;
 }
 
 void QB2Body::AddFixture(QB2Fixture& fixture)
@@ -163,7 +168,7 @@ void QB2Body::SetSleepingAllowed(bool sleepingAllowed)
 
 void QB2Body::SetAwake(bool awake)
 {
-    //QMutexLocker ml(&scene_.GetMutex());
+    QMutexLocker ml(&scene_.GetMutex());
     b2body_->SetAwake(awake);
 }
 

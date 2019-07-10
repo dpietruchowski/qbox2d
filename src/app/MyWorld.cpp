@@ -7,7 +7,7 @@ MyWorld::MyWorld(): QB2World({0, 0.1}), ground(*this), circle(*this)
     ground.circle = &circle;
 }
 
-MyCircle::MyCircle(QB2World& world): QB2Body(world), fixture(30, {0.2, 0.1, 1}, *this)
+MyCircle::MyCircle(QB2World& world): QB2Body(0, world), fixture(30, {0.2, 0.1, 1}, *this)
 {
     SetSleepingAllowed(false);
     SetPos(100, -20);
@@ -20,7 +20,7 @@ void MyCircle::OnUpdate()
     }
 }
 
-MyGround::MyGround(QB2World& world): QB2Body(world),
+MyGround::MyGround(QB2World& world): QB2Body(1, world),
     fixture(QPolygonF(
                 {QPointF{0, 0},
                 QPointF{0, 10},

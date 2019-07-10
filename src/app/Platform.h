@@ -7,7 +7,7 @@
 class Platform : public QB2Body
 {
 public:
-    Platform(const QRectF& rect, QB2World& world);
+    Platform(int id, const QRectF& rect, QB2World& world);
 
 private:
     QB2PolygonFixture fixture_;

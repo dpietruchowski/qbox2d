@@ -7,7 +7,7 @@
 class Rocket : public QB2Body
 {
 public:
-    Rocket(QB2World& world);
+    Rocket(int id, QB2World& world);
 
 private:
     QB2PolygonFixture fixture_;

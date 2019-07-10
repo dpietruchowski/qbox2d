@@ -15,8 +15,9 @@ public:
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
 
-    virtual bool KeyPressEvent(QKeyEvent *keyEvent) = 0;
-    virtual bool KeyReleaseEvent(QKeyEvent *keyEvent) = 0;
+    virtual bool Event(QEvent*) { return false; }
+    virtual bool KeyPressEvent(QKeyEvent*) { return false; }
+    virtual bool KeyReleaseEvent(QKeyEvent*) { return false; }
 
 private:
     virtual void OnUpdate() = 0;

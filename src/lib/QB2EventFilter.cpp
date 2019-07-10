@@ -14,6 +14,8 @@ void QB2EventFilter::Update()
 
 bool QB2EventFilter::eventFilter(QObject* obj, QEvent* event)
 {
+    if (Event(event)) return QObject::eventFilter(obj, event);
+
     switch(event->type()) {
         case QEvent::KeyPress: return KeyPressEvent(static_cast<QKeyEvent*>(event));
         case QEvent::KeyRelease: return KeyReleaseEvent(static_cast<QKeyEvent*>(event));
