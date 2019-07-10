@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "QB2Server.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -20,6 +22,7 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
+    QB2Server server_;
 };
 
 #endif // MAINWINDOW_H

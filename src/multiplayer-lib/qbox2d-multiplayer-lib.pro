@@ -7,8 +7,8 @@
 QT       += widgets network
 QT       -= gui
 
-TARGET = qbox2d
-TEMPLATE = app
+TARGET = qbox2d-multiplayer
+TEMPLATE = lib
 
 DEFINES += QBOX2D_LIBRARY
 
@@ -25,34 +25,25 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 QMAKE_CXXFLAGS += -std=c++17
 
-INCLUDEPATH += ../../lib
-INCLUDEPATH += ../../multiplayer-lib
-INCLUDEPATH += ../common
+INCLUDEPATH += ../lib
 
-LIBS += -L../../lib -lqbox2d -L../../multiplayer-lib -lqbox2d-multiplayer
+LIBS += -L../lib -lqbox2d
 
 unix {
     target.path = /usr/lib
     INSTALLS += target
 }
 
-SOURCES += \
-    ../common/Platform.cpp \
-    ../common/Rocket.cpp \
-    ../common/RocketLander.cpp \
-    ../common/RocketWorld.cpp \
-    ConnectDialog.cpp \
-    main.cpp \
-    MainWindow.cpp
-
 HEADERS += \
-    ../common/Platform.h \
-    ../common/Rocket.h \
-    ../common/RocketLander.h \
-    ../common/RocketWorld.h \
-    ConnectDialog.h \
-    MainWindow.h
+    QB2Client.h \
+    QB2Player.h \
+    QB2Server.h \
+    utils/serialize.h \
+    utils/session.h
 
-FORMS += \
-    ConnectDialog.ui \
-    MainWindow.ui
+SOURCES += \
+    QB2Client.cpp \
+    QB2Player.cpp \
+    QB2Server.cpp \
+    utils/serialize.cpp \
+    utils/session.cpp

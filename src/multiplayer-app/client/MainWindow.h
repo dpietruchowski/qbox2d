@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "QB2Client.h"
 
 namespace Ui {
 class MainWindow;
@@ -14,12 +15,13 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-signals:
+    void OnConnectButton();
 
-public slots:
+signals:
 
 private:
     Ui::MainWindow *ui;
+    QB2Client client_;
 };
 
 #endif // MAINWINDOW_H

@@ -1,0 +1,51 @@
+@startuml
+
+hide empty members
+
+QB2Server o-- QB2World
+QB2Client o-- QB2World
+
+class QB2World {
+    +void Init();
+    +void Start();
+    -void Step();
+    -void Update();
+
+    +ListRef<QB2Body>& GetBodies();
+    +const ListRef<QB2Body>& GetBodies() const;
+
+    ListRef<QB2Body> bodies_;
+    -{abstract} void OnUpdate()
+    + {signal} void updated();
+}
+
+class QB2Server {
+    +void OpenSession();
+
+    -void OnSessionOpen();
+    -void OnNewConnection();
+
+
+    QB2World world;
+    QTcpServer tcpServer;
+    std::vector<QB2Player> clients;
+}
+
+QB2EventFilter <|-- QB2Client
+
+class QB2Client {
+    +void Connect()
+
+    -void OnSessionOpen();
+
+    QB2World world;
+    QTcpSocket tcpSocket;
+}
+
+QB2Server o-- QB2Player
+
+class QB2Player {
+    QTcpSocket* tcpSocket;
+}
+
+@enduml

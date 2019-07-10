@@ -11,4 +11,7 @@ server.file = server/qbox2d-app-server.pro
 client.file = client/qbox2d-app-client.pro
 
 # Use .depends to specify that a project depends on another.
-app.depends = lib
+server.depends = lib
+server.depends = multiplayer-lib
+client.depends = lib
+client.depends = multiplayer-lib

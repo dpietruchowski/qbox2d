@@ -25,9 +25,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 QMAKE_CXXFLAGS += -std=c++17
 
-INCLUDEPATH += ../lib
+INCLUDEPATH += ../../lib
+INCLUDEPATH += ../../multiplayer-lib
+INCLUDEPATH += ../common
 
-LIBS += -L../../lib -lqbox2d
+LIBS += -L../../lib -lqbox2d -L../../multiplayer-lib -lqbox2d-multiplayer
 
 unix {
     target.path = /usr/lib
@@ -35,11 +37,19 @@ unix {
 }
 
 SOURCES += \
+    ../common/Platform.cpp \
+    ../common/Rocket.cpp \
+    ../common/RocketLander.cpp \
+    ../common/RocketWorld.cpp \
     main.cpp \
     MainWindow.cpp
 
 HEADERS += \
-    MainWindow.h
+    ../common/Platform.h \
+    ../common/Rocket.h \
+    ../common/RocketLander.h \
+    ../common/RocketWorld.h \
+    MainWindow.h \
 
 FORMS += \
     MainWindow.ui
