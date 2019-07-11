@@ -46,11 +46,5 @@ HEADERS += \
     RocketLanderWorld.h \
     RocketLander.h
 
-
-unix {
-    target.path = /usr/lib
-    INSTALLS += target
-}
-
 FORMS += \
     MainWindow.ui

@@ -28,7 +28,7 @@ QMAKE_CXXFLAGS += -std=c++17
 LIBS += -lBox2D
 
 SOURCES += \
-        QB2World.cpp \
+    QB2World.cpp \
     QB2Body.cpp \
     QB2Fixture.cpp \
     QB2CircleFixture.cpp \
@@ -37,9 +37,9 @@ SOURCES += \
     QB2EventFilter.cpp
 
 HEADERS += \
-        QB2World.h \
-        qbox2d_global.h \ 
+    qbox2d_global.h \
     utils/ListRef.h \
+    QB2World.h \
     QB2Body.h \
     QB2Fixture.h \
     QB2CircleFixture.h \
@@ -47,7 +47,11 @@ HEADERS += \
     QB2Scene.h \
     QB2EventFilter.h
 
+
 unix {
-    target.path = /usr/lib
+    target.path = /home/damian/workspace/libs
+    headers.path = /home/damian/workspace/libs/inc
+    headers.files += $$HEADERS
+    INSTALLS += headers
     INSTALLS += target
 }

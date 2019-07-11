@@ -31,11 +31,6 @@ INCLUDEPATH += ../common
 
 LIBS += -L../../lib -lqbox2d -L../../multiplayer-lib -lqbox2d-multiplayer
 
-unix {
-    target.path = /usr/lib
-    INSTALLS += target
-}
-
 SOURCES += \
     ../common/Platform.cpp \
     ../common/Rocket.cpp \

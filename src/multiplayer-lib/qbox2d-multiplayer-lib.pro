@@ -30,7 +30,7 @@ INCLUDEPATH += ../lib
 LIBS += -L../lib -lqbox2d
 
 unix {
-    target.path = /usr/lib
+    target.path = /home/damian/workspace/libs
     INSTALLS += target
 }
 
