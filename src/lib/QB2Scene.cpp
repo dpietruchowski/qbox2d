@@ -10,7 +10,7 @@
 
 QB2Scene::QB2Scene(QObject *parent) : QGraphicsScene(parent)
 {
-    setSceneRect(0, 0, 110, 110);
+    setSceneRect(0, 0, 1000, 1000);
     addEllipse({0, 0, 5, 5}, QPen(Qt::red), QBrush(Qt::red));
     mousePosText_ = addText("");
 }
