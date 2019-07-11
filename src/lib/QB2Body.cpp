@@ -288,6 +288,7 @@ void QB2Body::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*
         painter->drawRect(fixture.boundingRect());
         painter->restore();*/
         painter->save();
+        PreparePainter(painter);
         fixture.Paint(painter);
         painter->restore();
     }
@@ -303,6 +304,10 @@ QRectF QB2Body::boundingRect() const
         rect = rect.united(fixture.boundingRect());
     }
     return rect;
+}
+
+void QB2Body::PreparePainter(QPainter*) const
+{
 }
 
 b2Fixture* QB2Body::CreateB2Fixture(const b2FixtureDef& fixtureDef)

@@ -74,10 +74,13 @@ public:
 
     virtual void OnUpdate() {}
 
+    QRectF boundingRect() const override;
+
+protected:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
                QWidget* widget) override;
 
-    QRectF boundingRect() const override;
+    virtual void PreparePainter(QPainter* painter) const;
 
 private:
     b2Fixture* CreateB2Fixture(const b2FixtureDef& fixtureDef);
