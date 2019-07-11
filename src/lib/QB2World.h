@@ -55,9 +55,11 @@ private:
 
     QMutex& GetMutex();
 
+protected:
+    QB2Scene scene_;
+
 private:
     b2World b2world_;
-    QB2Scene scene_;
     ListRef<QB2Body> bodies_;
     QTimer timer_;
     QThread thread_;
