@@ -15,7 +15,7 @@ protected:
     bool KeyReleaseEvent(QKeyEvent* event) override;
 
 private:
-    void OnUpdate();
+    void OnUpdate() override;
 
 private:
     Rocket& rocket_;
