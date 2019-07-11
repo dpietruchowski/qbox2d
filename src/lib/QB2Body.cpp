@@ -288,7 +288,7 @@ void QB2Body::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*
         painter->drawRect(fixture.boundingRect());
         painter->restore();*/
         painter->save();
-        PreparePainter(painter);
+        PreparePaint(painter);
         fixture.PaintFixture(painter);
         painter->restore();
     }
@@ -306,7 +306,7 @@ QRectF QB2Body::boundingRect() const
     return rect;
 }
 
-void QB2Body::PreparePainter(QPainter*) const
+void QB2Body::PreparePaint(QPainter*) const
 {
 }
 

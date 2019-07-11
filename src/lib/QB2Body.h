@@ -80,7 +80,7 @@ protected:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
                QWidget* widget) override;
 
-    virtual void PreparePainter(QPainter* painter) const;
+    virtual void PreparePaint(QPainter* painter) const;
 
 private:
     b2Fixture* CreateB2Fixture(const b2FixtureDef& fixtureDef);

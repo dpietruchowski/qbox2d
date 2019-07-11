@@ -29,7 +29,7 @@ QB2Fixture::~QB2Fixture()
 void QB2Fixture::PaintFixture(QPainter* painter) const
 {
     painter->save();
-    PreparePainter(painter);
+    PreparePaint(painter);
     Paint(painter);
     painter->restore();
 }
@@ -95,7 +95,7 @@ bool QB2Fixture::IsSensor() const
     return b2fixture_->IsSensor();
 }
 
-void QB2Fixture::PreparePainter(QPainter*) const
+void QB2Fixture::PreparePaint(QPainter*) const
 {
 }
 

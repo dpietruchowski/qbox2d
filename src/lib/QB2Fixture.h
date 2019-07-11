@@ -44,7 +44,7 @@ public:
 
 protected:
     virtual void Paint(QPainter* painter) const = 0;
-    virtual void PreparePainter(QPainter* painter) const;
+    virtual void PreparePaint(QPainter* painter) const;
 
 private:
     void Create(const b2FixtureDef& fixtureDef);
