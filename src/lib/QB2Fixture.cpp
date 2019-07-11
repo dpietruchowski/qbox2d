@@ -1,5 +1,6 @@
 #include "QB2Fixture.h"
 
+#include <QPainter>
 #include <QMutexLocker>
 #include "QB2Body.h"
 
@@ -23,6 +24,14 @@ QB2Fixture::QB2Fixture(const b2Shape* shape, QB2Body& body)
 QB2Fixture::~QB2Fixture()
 {
     Delete();
+}
+
+void QB2Fixture::PaintFixture(QPainter* painter) const
+{
+    painter->save();
+    PreparePainter(painter);
+    Paint(painter);
+    painter->restore();
 }
 
 void QB2Fixture::SetFilterData(const b2Filter& filter)
@@ -84,6 +93,10 @@ float32 QB2Fixture::GetDensity() const
 bool QB2Fixture::IsSensor() const
 {
     return b2fixture_->IsSensor();
+}
+
+void QB2Fixture::PreparePainter(QPainter*) const
+{
 }
 
 QRectF QB2Fixture::boundingRect() const

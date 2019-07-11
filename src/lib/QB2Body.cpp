@@ -289,7 +289,7 @@ void QB2Body::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*
         painter->restore();*/
         painter->save();
         PreparePainter(painter);
-        fixture.Paint(painter);
+        fixture.PaintFixture(painter);
         painter->restore();
     }
 }

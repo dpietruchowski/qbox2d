@@ -23,7 +23,7 @@ public:
     explicit QB2Fixture(const b2Shape* shape, QB2Body& body);
     virtual ~QB2Fixture();
 
-    virtual void Paint(QPainter* painter) const = 0;
+    virtual void PaintFixture(QPainter* painter) const;
     virtual QRectF boundingRect() const = 0;
 
     void SetFilterData(const b2Filter& filter);
@@ -41,6 +41,10 @@ public:
     bool IsSensor() const;
 
     virtual void Debug() const = 0;
+
+protected:
+    virtual void Paint(QPainter* painter) const = 0;
+    virtual void PreparePainter(QPainter* painter) const;
 
 private:
     void Create(const b2FixtureDef& fixtureDef);
