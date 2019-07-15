@@ -10,8 +10,9 @@
 #include "QB2Body.h"
 
 QB2World::QB2World(const b2Vec2& gravity, QObject *parent)
-    : QObject(parent), b2world_(gravity)
+    : QB2EventFilter(parent), b2world_(gravity), contactListener_(scene_)
 {
+    b2world_.SetContactListener(&contactListener_);
     moveToThread(&thread_);
     connect(&timer_, &QTimer::timeout, this, &QB2World::Step);
     connect(this, &QB2World::BodyUpdated, &scene_, &QB2Scene::UpdateBody);

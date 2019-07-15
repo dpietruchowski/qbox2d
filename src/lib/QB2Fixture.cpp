@@ -70,6 +70,11 @@ void QB2Fixture::SetDensity(float32 denstity)
     b2fixture_->SetDensity(denstity);
 }
 
+QB2Body& QB2Fixture::GetBody()
+{
+    return body_;
+}
+
 b2Filter QB2Fixture::GetFilterData() const
 {
     return b2fixture_->GetFilterData();
@@ -115,6 +120,7 @@ void QB2Fixture::Create(const b2FixtureDef& fixtureDef)
     if (b2fixture_)
         return;
     b2fixture_ = body_.CreateB2Fixture(fixtureDef);
+    b2fixture_->SetUserData(this);
     body_.AddFixture(*this);
 }
 

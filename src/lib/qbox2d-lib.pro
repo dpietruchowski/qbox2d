@@ -28,6 +28,8 @@ QMAKE_CXXFLAGS += -std=c++17
 LIBS += -lBox2D
 
 SOURCES += \
+    QB2ContactEvent.cpp \
+    QB2ContactListener.cpp \
     QB2World.cpp \
     QB2Body.cpp \
     QB2Fixture.cpp \
@@ -37,6 +39,8 @@ SOURCES += \
     QB2EventFilter.cpp
 
 HEADERS += \
+    QB2ContactEvent.h \
+    QB2ContactListener.h \
     qbox2d_global.h \
     utils/ListRef.h \
     QB2World.h \

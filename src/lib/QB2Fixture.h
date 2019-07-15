@@ -34,6 +34,8 @@ public:
     void SetDensity(float32 denstity);
     void SetSensor(bool sensor);
 
+    QB2Body& GetBody();
+
     b2Filter GetFilterData() const;
     float32 GetFriction() const;
     float32 GetRestitution() const;

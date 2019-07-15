@@ -14,11 +14,12 @@
 
 #include "QB2Scene.h"
 #include "QB2EventFilter.h"
+#include "QB2ContactListener.h"
 
 class QB2Body;
 class QKeyEvent;
 
-class QBOX2DSHARED_EXPORT QB2World : public QObject
+class QBOX2DSHARED_EXPORT QB2World : public QB2EventFilter
 {
     Q_OBJECT
     friend class QB2Body;
@@ -42,6 +43,9 @@ signals:
     void BodyUpdated(QB2Body*);
     void BodyAdded(QB2Body*);
 
+protected:
+
+
 private:
     void Step();
     void Update();
@@ -64,6 +68,7 @@ private:
     QTimer timer_;
     QThread thread_;
     QMutex mutex_;
+    QB2ContactListener contactListener_;
 };
 
 #endif // QB2WORLD_H

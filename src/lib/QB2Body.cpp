@@ -15,9 +15,10 @@
 #include "QB2CircleFixture.h"
 #include "QB2PolygonFixture.h"
 #include "QB2World.h"
+#include "QB2ContactEvent.h"
 
 QB2Body::QB2Body(int id, QB2World& scene, QGraphicsItem *parent)
-    : QGraphicsItem(parent), id_(id), b2body_(nullptr), scene_(scene)
+    : QGraphicsObject(parent), id_(id), b2body_(nullptr), scene_(scene)
 {
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
@@ -25,13 +26,13 @@ QB2Body::QB2Body(int id, QB2World& scene, QGraphicsItem *parent)
 }
 
 QB2Body::QB2Body(int id, const b2BodyDef& bodyDef, QB2World& scene, QGraphicsItem* parent)
-    : QGraphicsItem(parent), id_(id), b2body_(nullptr), scene_(scene)
+    : QGraphicsObject(parent), id_(id), b2body_(nullptr), scene_(scene)
 {
     Create(bodyDef);
 }
 
 QB2Body::QB2Body(int id, const QPointF& position, QB2World& scene, QGraphicsItem* parent)
-    : QGraphicsItem(parent), id_(id), b2body_(nullptr), scene_(scene)
+    : QGraphicsObject(parent), id_(id), b2body_(nullptr), scene_(scene)
 {
     b2BodyDef bodyDef;
     bodyDef.position = {position.x(), position.y()};
@@ -46,6 +47,12 @@ QB2Body::~QB2Body()
 int QB2Body::GetId() const
 {
     return id_;
+}
+
+void QB2Body::DeleteSelf()
+{
+    QMutexLocker ml(&scene_.GetMutex());
+    delete this;
 }
 
 void QB2Body::AddFixture(QB2Fixture& fixture)
@@ -294,6 +301,26 @@ void QB2Body::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*
     }
 }
 
+void QB2Body::BeginContact(QB2ContactEvent*)
+{
+
+}
+
+void QB2Body::EndContact(QB2ContactEvent*)
+{
+
+}
+
+void QB2Body::PreSolveContact(QB2ContactEvent*)
+{
+
+}
+
+void QB2Body::PostSolveContact(QB2ContactEvent*)
+{
+
+}
+
 QRectF QB2Body::boundingRect() const
 {
     if (fixtures_.size() == 0)
@@ -304,6 +331,29 @@ QRectF QB2Body::boundingRect() const
         rect = rect.united(fixture.boundingRect());
     }
     return rect;
+}
+
+bool QB2Body::event(QEvent* ev)
+{
+    int type = ev->type();
+    QB2ContactEvent* contactEvent = static_cast<QB2ContactEvent*>(ev);
+    switch(type) {
+        case QB2ContactEvent::BeginContact:
+            BeginContact(contactEvent);
+            break;
+        case QB2ContactEvent::EndContact:
+            EndContact(contactEvent);
+            break;
+        case QB2ContactEvent::PreSolveContact:
+            PreSolveContact(contactEvent);
+            break;
+        case QB2ContactEvent::PostSolveContact:
+            PostSolveContact(contactEvent);
+            break;
+        default:
+            break;
+    }
+    return QGraphicsObject::event(ev);
 }
 
 void QB2Body::PreparePaint(QPainter*) const
@@ -327,6 +377,7 @@ void QB2Body::Create(const b2BodyDef& bodyDef)
     if (b2body_)
         return;
     b2body_ = scene_.CreateB2Body(bodyDef);
+    b2body_->SetUserData(this);
     scene_.AddBody(*this);
 }
 
