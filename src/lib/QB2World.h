@@ -7,6 +7,7 @@
 #include <QTimer>
 #include <QObject>
 #include <QThread>
+#include <QGraphicsScene>
 #include <Box2D/Box2D.h>
 
 #include "utils/ListRef.h"
@@ -20,7 +21,7 @@ class QB2Body;
 class QKeyEvent;
 class QB2EventFilter;
 
-class QBOX2DSHARED_EXPORT QB2World : public QObject, public QB2Object
+class QBOX2DSHARED_EXPORT QB2World : public QGraphicsScene, public QB2Object
 {
     Q_OBJECT
     friend class QB2Body;
@@ -32,20 +33,21 @@ public:
 
     QB2Body* GetBody(int id);
 
+    void InstallEventFilter(QB2EventFilter& filter);
+
     void Start();
     void Stop();
-
-    QB2Scene& GetScene();
-
-    void InstallEventFilter(QB2EventFilter& eventFilter);
 
 signals:
     void Updated();
     void BodyUpdated(QB2Body*);
     void BodyAdded(QB2Body*);
+    void BodyRemoved(QB2Body*);
 
 protected:
     bool event(QEvent* ev) override;
+    void drawBackground(QPainter *painter, const QRectF &rect) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
     void Step();
@@ -57,18 +59,12 @@ private:
     void AddBody(QB2Body& body);
     void RemoveBody(QB2Body& body);
 
-    QMutex& GetMutex();
-
-protected:
-    QB2Scene scene_;
-
 private:
     b2World b2world_;
     ListRef<QB2Body> bodies_;
-    QTimer timer_;
-    QThread thread_;
-    QMutex mutex_;
     QB2ContactListener contactListener_;
+    QTimer timer_;
+    QGraphicsTextItem *mousePosText_;
 };
 
 #endif // QB2WORLD_H

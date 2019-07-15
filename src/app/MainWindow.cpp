@@ -8,9 +8,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow), world_()
 {
     ui->setupUi(this);
-    ui->graphicsView->setScene(&world_.GetScene());
+    ui->graphicsView->setScene(&world_);
     ui->graphicsView->scale(1, -1);
-    auto items = world_.GetScene().items();
+    auto items = world_.items();
     int i = 0;
 
     world_.Start();

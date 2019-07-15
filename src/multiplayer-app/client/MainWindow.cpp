@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     connect(ui->actionConnect, &QAction::triggered, this, &MainWindow::OnConnectButton);
 
-    ui->graphicsView->setScene(&client_.GetWorld().GetScene());
+    ui->graphicsView->setScene(&client_.GetWorld());
 }
 
 MainWindow::~MainWindow()

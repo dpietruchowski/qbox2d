@@ -13,8 +13,6 @@ public:
 protected:
     bool KeyPressEvent(QKeyEvent* event) override;
     bool KeyReleaseEvent(QKeyEvent* event) override;
-
-private:
     void OnUpdate() override;
 
 private:

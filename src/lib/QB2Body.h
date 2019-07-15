@@ -27,8 +27,6 @@ public:
 
     int GetId() const;
 
-    void DeleteSelf();
-
     void AddFixture(QB2Fixture& fixture);
     void RemoveFixture(QB2Fixture& fixture);
 
@@ -88,8 +86,6 @@ private:
     void DestroyB2Fixture(b2Fixture* fixture);
     void Create(const b2BodyDef& bodyDef);
     void Delete();
-
-    QMutex& GetMutex();
 
 private:
     float MapAngle360(float angle) const;

@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     server_.OpenSession();
     server_.GetWorld().Start();
 
-    ui->graphicsView->setScene(&server_.GetWorld().GetScene());
+    ui->graphicsView->setScene(&server_.GetWorld());
 
     ui->serverLabel->setText(server_.GetHost());
     ui->portLabel->setText(QString::number(server_.GetPort()));

@@ -36,7 +36,6 @@ void QB2Fixture::PaintFixture(QPainter* painter) const
 
 void QB2Fixture::SetFilterData(const b2Filter& filter)
 {
-    QMutexLocker ml(&body_.GetMutex());
     b2fixture_->SetFilterData(filter);
 }
 
@@ -54,19 +53,16 @@ void QB2Fixture::SetParams(float32 friction, float32 restitution, float32 densti
 
 void QB2Fixture::SetFriction(float32 friction)
 {
-    QMutexLocker ml(&body_.GetMutex());
     b2fixture_->SetFriction(friction);
 }
 
 void QB2Fixture::SetRestitution(float32 restitution)
 {
-    QMutexLocker ml(&body_.GetMutex());
     b2fixture_->SetRestitution(restitution);
 }
 
 void QB2Fixture::SetDensity(float32 denstity)
 {
-    QMutexLocker ml(&body_.GetMutex());
     b2fixture_->SetDensity(denstity);
 }
 
@@ -126,8 +122,10 @@ void QB2Fixture::Create(const b2FixtureDef& fixtureDef)
 
 void QB2Fixture::Delete()
 {
-    if (b2fixture_)
+    if (b2fixture_) {
         body_.DestroyB2Fixture(b2fixture_);
+        b2fixture_ = nullptr;
+    }
     body_.RemoveFixture(*this);
 }
 
