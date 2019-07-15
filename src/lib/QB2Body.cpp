@@ -301,26 +301,6 @@ void QB2Body::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*
     }
 }
 
-void QB2Body::BeginContact(QB2ContactEvent*)
-{
-
-}
-
-void QB2Body::EndContact(QB2ContactEvent*)
-{
-
-}
-
-void QB2Body::PreSolveContact(QB2ContactEvent*)
-{
-
-}
-
-void QB2Body::PostSolveContact(QB2ContactEvent*)
-{
-
-}
-
 QRectF QB2Body::boundingRect() const
 {
     if (fixtures_.size() == 0)
@@ -335,24 +315,8 @@ QRectF QB2Body::boundingRect() const
 
 bool QB2Body::event(QEvent* ev)
 {
-    int type = ev->type();
-    QB2ContactEvent* contactEvent = static_cast<QB2ContactEvent*>(ev);
-    switch(type) {
-        case QB2ContactEvent::BeginContact:
-            BeginContact(contactEvent);
-            break;
-        case QB2ContactEvent::EndContact:
-            EndContact(contactEvent);
-            break;
-        case QB2ContactEvent::PreSolveContact:
-            PreSolveContact(contactEvent);
-            break;
-        case QB2ContactEvent::PostSolveContact:
-            PostSolveContact(contactEvent);
-            break;
-        default:
-            break;
-    }
+    if (OnEvent(ev))
+        return true;
     return QGraphicsObject::event(ev);
 }
 

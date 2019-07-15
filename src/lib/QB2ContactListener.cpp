@@ -5,8 +5,9 @@
 
 #include "QB2ContactEvent.h"
 #include "QB2Body.h"
+#include "QB2World.h"
 
-QB2ContactListener::QB2ContactListener(QGraphicsScene& scene): scene_(scene)
+QB2ContactListener::QB2ContactListener(QB2World& scene): world_(scene)
 {
 }
 
@@ -17,11 +18,11 @@ void QB2ContactListener::BeginContact(b2Contact* contact)
     QB2Body& bodyA = event.GetFixtureA()->GetBody();
     QB2Body& bodyB = event.GetFixtureB()->GetBody();
 
-    qApp->sendEvent(&scene_, &event);
+    qApp->sendEvent(&world_, &event);
     event.SetA();
-    scene_.sendEvent(&bodyA, &event);
+    world_.GetScene().sendEvent(&bodyA, &event);
     event.SetB();
-    scene_.sendEvent(&bodyB, &event);
+    world_.GetScene().sendEvent(&bodyB, &event);
 }
 
 void QB2ContactListener::EndContact(b2Contact* contact)
@@ -31,11 +32,11 @@ void QB2ContactListener::EndContact(b2Contact* contact)
     QB2Body& bodyA = event.GetFixtureA()->GetBody();
     QB2Body& bodyB = event.GetFixtureB()->GetBody();
 
-    qApp->sendEvent(&scene_, &event);
+    qApp->sendEvent(&world_, &event);
     event.SetA();
-    scene_.sendEvent(&bodyA, &event);
+    world_.GetScene().sendEvent(&bodyA, &event);
     event.SetB();
-    scene_.sendEvent(&bodyB, &event);
+    world_.GetScene().sendEvent(&bodyB, &event);
 }
 
 void QB2ContactListener::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
@@ -45,11 +46,11 @@ void QB2ContactListener::PreSolve(b2Contact* contact, const b2Manifold* oldManif
     QB2Body& bodyA = event.GetFixtureA()->GetBody();
     QB2Body& bodyB = event.GetFixtureB()->GetBody();
 
-    qApp->sendEvent(&scene_, &event);
+    qApp->sendEvent(&world_, &event);
     event.SetA();
-    scene_.sendEvent(&bodyA, &event);
+    world_.GetScene().sendEvent(&bodyA, &event);
     event.SetB();
-    scene_.sendEvent(&bodyB, &event);
+    world_.GetScene().sendEvent(&bodyB, &event);
 }
 
 void QB2ContactListener::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
@@ -59,9 +60,9 @@ void QB2ContactListener::PostSolve(b2Contact* contact, const b2ContactImpulse* i
     QB2Body& bodyA = event.GetFixtureA()->GetBody();
     QB2Body& bodyB = event.GetFixtureB()->GetBody();
 
-    qApp->sendEvent(&scene_, &event);
+    qApp->sendEvent(&world_, &event);
     event.SetA();
-    scene_.sendEvent(&bodyA, &event);
+    world_.GetScene().sendEvent(&bodyA, &event);
     event.SetB();
-    scene_.sendEvent(&bodyB, &event);
+    world_.GetScene().sendEvent(&bodyB, &event);
 }

@@ -7,10 +7,11 @@
 #include <QThread>
 #include <QDebug>
 
+#include "QB2EventFilter.h"
 #include "QB2Body.h"
 
 QB2World::QB2World(const b2Vec2& gravity, QObject *parent)
-    : QB2EventFilter(parent), b2world_(gravity), contactListener_(scene_)
+    : QObject(parent), b2world_(gravity), contactListener_(*this)
 {
     b2world_.SetContactListener(&contactListener_);
     moveToThread(&thread_);
@@ -67,6 +68,13 @@ void QB2World::InstallEventFilter(QB2EventFilter& eventFilter)
 {
     scene_.installEventFilter(&eventFilter);
     connect(this, &QB2World::Updated, &eventFilter, &QB2EventFilter::Update);
+}
+
+bool QB2World::event(QEvent* ev)
+{
+    if (OnEvent(ev))
+        return true;
+    return QObject::event(ev);
 }
 
 void QB2World::Update()

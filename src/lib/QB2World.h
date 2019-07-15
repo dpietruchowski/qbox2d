@@ -12,14 +12,15 @@
 #include "utils/ListRef.h"
 #include "qbox2d_global.h"
 
+#include "QB2Object.h"
 #include "QB2Scene.h"
-#include "QB2EventFilter.h"
 #include "QB2ContactListener.h"
 
 class QB2Body;
 class QKeyEvent;
+class QB2EventFilter;
 
-class QBOX2DSHARED_EXPORT QB2World : public QB2EventFilter
+class QBOX2DSHARED_EXPORT QB2World : public QObject, public QB2Object
 {
     Q_OBJECT
     friend class QB2Body;
@@ -44,12 +45,11 @@ signals:
     void BodyAdded(QB2Body*);
 
 protected:
-
+    bool event(QEvent* ev) override;
 
 private:
     void Step();
     void Update();
-    virtual void OnUpdate() {}
 
 private:
     b2Body* CreateB2Body(const b2BodyDef& bodyDef);

@@ -32,10 +32,10 @@ public:
     QB2Body* GetBodyB();
 
 private:
-    bool isA = true;
     QB2Fixture* fixtureA_ = nullptr;
     QB2Fixture* fixtureB_ = nullptr;
     b2Contact* contact_ = nullptr;
+    bool isA = true;
 };
 
 #endif // QB2CONTACTEVENT_H

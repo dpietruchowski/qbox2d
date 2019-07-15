@@ -8,15 +8,15 @@
 #include <Box2D/Box2D.h>
 
 #include "utils/ListRef.h"
+#include "QB2Object.h"
 #include "QB2Fixture.h"
 #include "qbox2d_global.h"
 
 class QB2World;
 class QB2CircleFixture;
 class QB2PolygonFixture;
-class QB2ContactEvent;
 
-class QBOX2DSHARED_EXPORT QB2Body : public QGraphicsObject
+class QBOX2DSHARED_EXPORT QB2Body : public QGraphicsObject, public QB2Object
 {
     friend class QB2Fixture;
 public:
@@ -75,19 +75,12 @@ public:
 
     void Update();
 
-    virtual void OnUpdate() {}
-
     QRectF boundingRect() const override;
 
 protected:
     bool event(QEvent* ev) override;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
                QWidget* widget) override;
-
-    virtual void BeginContact(QB2ContactEvent* contactEvent);
-    virtual void EndContact(QB2ContactEvent* contactEvent);
-    virtual void PreSolveContact(QB2ContactEvent* contactEvent);
-    virtual void PostSolveContact(QB2ContactEvent* contactEvent);
     virtual void PreparePaint(QPainter* painter) const;
 
 private:
