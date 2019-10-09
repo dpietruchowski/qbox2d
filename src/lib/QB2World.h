@@ -32,8 +32,12 @@ public:
     virtual ~QB2World() override;
 
     QB2Body* GetBody(int id);
+    ListRef<QB2Body>& GetBodies();
 
     void InstallEventFilter(QB2EventFilter& filter);
+    void RemoveEventFilter(QB2EventFilter& filter);
+
+    const QTransform& GetTransform() const;
 
     void Start();
     void Stop();
@@ -47,13 +51,14 @@ signals:
 protected:
     bool event(QEvent* ev) override;
     void drawBackground(QPainter *painter, const QRectF &rect) override;
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
     void Step();
     void Update();
+    void DrawJoints(QPainter *painter);
 
 private:
+    void CreateJoint(const b2JointDef& jointDef);
     b2Body* CreateB2Body(const b2BodyDef& bodyDef);
     void DestroyB2Body(b2Body* body);
     void AddBody(QB2Body& body);
@@ -61,6 +66,7 @@ private:
 
 private:
     b2World b2world_;
+    QTransform transform_;
     ListRef<QB2Body> bodies_;
     QB2ContactListener contactListener_;
     QTimer timer_;

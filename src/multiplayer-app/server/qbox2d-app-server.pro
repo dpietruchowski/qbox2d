@@ -7,7 +7,7 @@
 QT       += widgets network
 QT       -= gui
 
-TARGET = qbox2d
+TARGET = qbox2d-server
 TEMPLATE = app
 
 DEFINES += QBOX2D_LIBRARY

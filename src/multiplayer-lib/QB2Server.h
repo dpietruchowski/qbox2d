@@ -53,6 +53,7 @@ private:
     QTcpServer* server_ = nullptr;
     QNetworkSession* session_;
     int nextId_ = 100;
+    QHostAddress address_;
 };
 
 #endif // QB2SERVER_H

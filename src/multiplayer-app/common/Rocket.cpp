@@ -3,9 +3,9 @@
 namespace {
 
 const QPolygonF rocketShape = QPolygonF({
-            QPoint{0, 30},
-        QPoint{-10, 20}, QPoint{10, 20},
-        QPoint{-10, -20}, QPoint{10, -20}});
+            QPointF{0, 3.0},
+        QPointF{-1.0, 2.0}, QPointF{1.0, 2.0},
+        QPointF{-1.0, -2.0}, QPointF{1.0, -2.0}});
 
 }
 

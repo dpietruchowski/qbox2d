@@ -4,6 +4,7 @@
 #include <QKeyEvent>
 #include <QDebug>
 
+int count = 0;
 QByteArray EventSerialize(QEvent* event)
 {
     QByteArray data;
@@ -11,8 +12,12 @@ QByteArray EventSerialize(QEvent* event)
     switch(event->type()) {
         case QEvent::KeyPress:
         case QEvent::KeyRelease:
+            if (static_cast<QKeyEvent*>(event)->isAutoRepeat())
+                break;
             dataStream << event->type();
             dataStream << static_cast<QKeyEvent*>(event)->key();
+            dataStream << static_cast<QKeyEvent*>(event)->isAutoRepeat();
+            qDebug() << "Client " << count++ << event->type();
             break;
         default:
             break;
@@ -30,7 +35,11 @@ QEvent* EventDeserialize(const QByteArray& event)
         case QEvent::KeyRelease:
             int key;
             dataStream >> key;
-            return new QKeyEvent(static_cast<QEvent::Type>(type), key, Qt::NoModifier);
+            bool autoRepeat;
+            dataStream >> autoRepeat;
+            qDebug() << "Client " << count++ << static_cast<QEvent::Type>(type);
+            return new QKeyEvent(static_cast<QEvent::Type>(type), key,
+                                 Qt::NoModifier, {}, autoRepeat);
         default:
             break;
     }

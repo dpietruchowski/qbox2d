@@ -35,20 +35,24 @@ bool QB2Object::OnEvent(QEvent* event)
     return false;
 }
 
-void QB2Object::OnBeginContact(QB2ContactEvent*)
+void QB2Object::OnBeginContact(QB2ContactEvent* event)
 {
+    event->setAccepted(false);
 }
 
-void QB2Object::OnEndContact(QB2ContactEvent*)
+void QB2Object::OnEndContact(QB2ContactEvent* event)
 {
+    event->setAccepted(false);
 }
 
-void QB2Object::OnPreSolveContact(QB2ContactEvent*)
+void QB2Object::OnPreSolveContact(QB2ContactEvent* event)
 {
+    event->setAccepted(false);
 }
 
-void QB2Object::OnPostSolveContact(QB2ContactEvent*)
+void QB2Object::OnPostSolveContact(QB2ContactEvent* event)
 {
+    event->setAccepted(false);
 }
 
 void QB2Object::OnUpdate()

@@ -15,11 +15,11 @@
 QB2World::QB2World(const b2Vec2& gravity, QObject *parent)
     : QGraphicsScene(parent), b2world_(gravity), contactListener_(*this)
 {
-    setSceneRect(0, 0, 1000, 1000);
     addEllipse({0, 0, 5, 5}, QPen(Qt::red), QBrush(Qt::red));
     mousePosText_ = addText("");
     b2world_.SetContactListener(&contactListener_);
     connect(&timer_, &QTimer::timeout, this, &QB2World::Step);
+    transform_.scale(10, 10);
 }
 
 QB2World::~QB2World()
@@ -43,10 +43,26 @@ QB2Body* QB2World::GetBody(int id)
     return nullptr;
 }
 
+ListRef<QB2Body>& QB2World::GetBodies()
+{
+    return bodies_;
+}
+
 void QB2World::InstallEventFilter(QB2EventFilter& filter)
 {
     installEventFilter(&filter);
     connect(this, &QB2World::Updated, &filter, &QB2EventFilter::Update);
+}
+
+void QB2World::RemoveEventFilter(QB2EventFilter& filter)
+{
+    removeEventFilter(&filter);
+    disconnect(&filter);
+}
+
+const QTransform& QB2World::GetTransform() const
+{
+    return transform_;
 }
 
 void QB2World::Step()
@@ -80,6 +96,23 @@ void QB2World::Update()
     }
     OnUpdate();
     emit Updated();
+}
+
+void QB2World::DrawJoints(QPainter* painter)
+{
+    b2Joint* joint = b2world_.GetJointList();
+    for (int i = 0; i < b2world_.GetJointCount(); ++i) {
+        QPointF anchorA = {joint->GetAnchorA().x, joint->GetAnchorA().y};
+        QPointF anchorB = {joint->GetAnchorB().x, joint->GetAnchorB().y};
+        painter->drawLine(anchorA, anchorB);
+        qDebug() << anchorA << anchorB;
+        joint = joint->GetNext();
+    }
+}
+
+void QB2World::CreateJoint(const b2JointDef& jointDef)
+{
+    b2world_.CreateJoint(&jointDef);
 }
 
 b2Body* QB2World::CreateB2Body(const b2BodyDef& bodyDef)
@@ -131,18 +164,4 @@ void QB2World::drawBackground(QPainter* painter, const QRectF& rect)
     for (qreal x = startLeft; x <= rect.right(); x += step) {
        painter->drawLine(x, rect.top(), x, rect.bottom());
     }
-}
-
-void QB2World::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
-{
-    QPointF mousePosition = event->scenePos();
-
-    QString textMouse = "(%1, %2)";
-    QString xpos = QString::number(mousePosition.x());
-    QString ypos = QString::number(mousePosition.y());
-    // now draw mouse position
-    mousePosText_->setPlainText(textMouse.arg(xpos).arg(ypos));
-    mousePosText_->setPos(mousePosition.x()+4, mousePosition.y());
-
-    QGraphicsScene::mouseMoveEvent(event);
 }

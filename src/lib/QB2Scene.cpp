@@ -10,7 +10,6 @@
 
 QB2Scene::QB2Scene(QObject *parent) : QGraphicsScene(parent)
 {
-    setSceneRect(0, 0, 1000, 1000);
     addEllipse({0, 0, 5, 5}, QPen(Qt::red), QBrush(Qt::red));
     mousePosText_ = addText("");
 }
@@ -56,7 +55,7 @@ void QB2Scene::drawBackground(QPainter* painter, const QRectF& rect)
        painter->drawLine(x, rect.top(), x, rect.bottom());
     }
 }
-
+/*
 void QB2Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
     QPointF mousePosition = event->scenePos();
@@ -70,3 +69,4 @@ void QB2Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
     QGraphicsScene::mouseMoveEvent(event);
 }
+*/

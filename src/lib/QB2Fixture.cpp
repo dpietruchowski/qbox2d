@@ -71,6 +71,11 @@ QB2Body& QB2Fixture::GetBody()
     return body_;
 }
 
+const QTransform& QB2Fixture::GetWorldTransform() const
+{
+    return body_.GetWorldTransform();
+}
+
 b2Filter QB2Fixture::GetFilterData() const
 {
     return b2fixture_->GetFilterData();

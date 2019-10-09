@@ -14,6 +14,7 @@ bool RocketLander::KeyPressEvent(QKeyEvent* event)
 {
     if (event->isAutoRepeat())
         return true;
+
     switch(event->key()) {
         case Qt::Key_Up: {
             bottomEngine = true;
@@ -85,16 +86,16 @@ bool RocketLander::KeyReleaseEvent(QKeyEvent* event)
 
 void RocketLander::OnUpdate()
 {
-    QVector2D lForce = rocket_.MapForceToLocal({-50, 0});
-    QVector2D rForce = rocket_.MapForceToLocal({50, 0});
-    QVector2D bForce = rocket_.MapForceToLocal({0, 150});
+    QVector2D lForce = rocket_.MapVectorToLocal({-0.05, 0});
+    QVector2D rForce = rocket_.MapVectorToLocal({0.05, 0});
+    QVector2D bForce = rocket_.MapVectorToLocal({0, 0.15});
 
     if (leftEngine)
-        rocket_.ApplyForce(lForce, {-10, 20});
+        rocket_.ApplyForce(lForce, {-1.0, 2.0});
 
     if (rightEngine)
-        rocket_.ApplyForce(rForce, {10, 20});
+        rocket_.ApplyForce(rForce, {1.0, 2.0});
 
     if (bottomEngine)
-        rocket_.ApplyForce(bForce, {0, -20});
+        rocket_.ApplyForce(bForce, {0, -2.0});
 }
