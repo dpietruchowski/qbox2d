@@ -47,3 +47,6 @@ SOURCES += \
     QB2Server.cpp \
     utils/serialize.cpp \
     utils/session.cpp
+
+SUBDIRS += \
+    ../smart-intersection/smart-intersection.pro

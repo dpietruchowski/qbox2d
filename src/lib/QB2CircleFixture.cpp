@@ -50,9 +50,9 @@ void QB2CircleFixture::Debug() const
 
 QRectF QB2CircleFixture::CreateEllipse() const
 {
-    float32 radius = GetShape()->m_radius;
-    float32 diameter = radius * 2;
-    return QRectF(-radius, -radius, diameter, diameter);
+    float32 r = GetShape()->m_radius;
+    float32 d = r * 2;
+    return GetWorldTransform().mapRect(QRectF(-r, -r, d, d));
 }
 
 b2Shape* QB2CircleFixture::CreateShape(float32 radius) const

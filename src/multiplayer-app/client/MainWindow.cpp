@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->actionConnect, &QAction::triggered, this, &MainWindow::OnConnectButton);
 
     ui->graphicsView->setScene(&client_.GetWorld());
+    ui->graphicsView->setSceneRect(-1, 1, 250, 250);
 }
 
 MainWindow::~MainWindow()

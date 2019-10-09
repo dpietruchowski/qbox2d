@@ -11,7 +11,7 @@ QB2Server::QB2Server(): bodiesStream_(&bodiesData_, QIODevice::WriteOnly), bodie
     bodiesStream_ << Message::UpdateBodies;
     bodiesStream_.setVersion(QDataStream::Qt_4_0);
     bodiesAddedStream_ << Message::AddBodies;
-    bodiesStream_.setVersion(QDataStream::Qt_4_0);
+    bodiesAddedStream_.setVersion(QDataStream::Qt_4_0);
 }
 
 void QB2Server::SetPlayerFactory(const QB2Server::FactoryFunction& factory)
@@ -42,7 +42,7 @@ quint16 QB2Server::GetPort() const
 QString QB2Server::GetHost() const
 {
     if (server_)
-        return server_->serverAddress().toString();
+        return address_.toString();
     return "Not connected";
 }
 
@@ -94,30 +94,43 @@ void QB2Server::OnSessionOpen()
     for (int i = 0; i < ipAddressesList.size(); ++i) {
         if (ipAddressesList.at(i) != QHostAddress::LocalHost &&
             ipAddressesList.at(i).toIPv4Address()) {
-            ipAddress = ipAddressesList.at(i).toString();
+            address_ = ipAddressesList.at(i);
             break;
         }
     }
     // if we did not find one, use IPv4 localhost
-    if (ipAddress.isEmpty())
-        ipAddress = QHostAddress(QHostAddress::LocalHost).toString();
+    if (address_.toString().isEmpty())
+        address_ = QHostAddress(QHostAddress::LocalHost);
 }
 
 void QB2Server::OnNewConnection()
 {
+
     QTcpSocket* socket = server_->nextPendingConnection();
     int i = players_.size();
-    players_.emplace_back(playerFactory_(*socket));
+    auto& newPlayer = players_.emplace_back(playerFactory_(*socket));
     connect(socket, &QTcpSocket::disconnected, [this, i] { OnSocketDisconnect(i); });
 
-    bodiesAddedStream_ << Message::AddBodies;
     for (auto& player: players_) {
+        if (&player == &newPlayer)
+            continue;
         if (bodiesAddedData_.size() > 4) {
             player->SendData(bodiesAddedData_);
         }
     }
     bodiesAddedData_.clear();
     bodiesAddedStream_.device()->reset();
+    bodiesAddedStream_ << Message::AddBodies;
+
+    for (auto& body: world_->GetBodies()) {
+        OnBodyAdded(&body.get());
+    }
+    if (bodiesAddedData_.size() > 4) {
+        newPlayer->SendData(bodiesAddedData_);
+    }
+    bodiesAddedData_.clear();
+    bodiesAddedStream_.device()->reset();
+    bodiesAddedStream_ << Message::AddBodies;
 }
 
 void QB2Server::OnSocketDisconnect(int i)
@@ -154,7 +167,7 @@ void QB2Server::OnBodyUpdate(QB2Body* body)
     bodiesStream_ << body->GetAngularVelocity();
     bodiesStream_ << body->GetLinearDamping();
     bodiesStream_ << body->GetAngularDamping();
-    qDebug() << "BODY: " << body->GetId() << body->GetPos() << body->GetAngle();
+    //qDebug() << "BODY: " << body->GetId() << body->GetPos() << body->GetAngle();
 }
 
 void QB2Server::OnBodyAdded(QB2Body* body)
@@ -163,5 +176,5 @@ void QB2Server::OnBodyAdded(QB2Body* body)
         return;
 
     bodiesAddedStream_ << body->GetId();
-    qDebug() << "Added: " << body->GetId();
+    //qDebug() << "Added: " << body->GetId();
 }

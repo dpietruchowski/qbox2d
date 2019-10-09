@@ -49,6 +49,11 @@ int QB2Body::GetId() const
     return id_;
 }
 
+const QTransform& QB2Body::GetWorldTransform() const
+{
+    scene_.GetTransform();
+}
+
 void QB2Body::AddFixture(QB2Fixture& fixture)
 {
     fixtures_.Add(fixture);
@@ -59,9 +64,22 @@ void QB2Body::RemoveFixture(QB2Fixture& fixture)
     fixtures_.Remove(fixture);
 }
 
+void QB2Body::CreateJoint(QB2Body& body, b2JointDef& jointDef)
+{
+    jointDef.bodyA = b2body_;
+    jointDef.bodyB = body.b2body_;
+
+    scene_.CreateJoint(jointDef);
+}
+
 void QB2Body::SetPos(QPointF pos)
 {
     SetPos(pos.x(), pos.y());
+}
+
+void QB2Body::SetScenePos(const QPointF& scenePos)
+{
+    SetPos(MapFromScenePos(scenePos));
 }
 
 
@@ -175,6 +193,18 @@ QPointF QB2Body::GetPos() const
     return QPointF(pos.x, pos.y);
 }
 
+QPointF QB2Body::GetScenePos() const
+{
+    return MapToScenePos(GetPos());
+}
+
+float QB2Body::GetRadiansAngle() const
+{
+    float angle = GetAngle();
+    angle = qDegreesToRadians(angle);
+    return angle;
+}
+
 float QB2Body::GetAngle() const
 {
     float angle = qRadiansToDegrees(b2body_->GetAngle());
@@ -190,7 +220,7 @@ QVector2D QB2Body::GetLinearVelocity() const
 
 float32 QB2Body::GetAngularVelocity() const
 {
-    return b2body_->GetAngularDamping();
+    return b2body_->GetAngularVelocity();
 }
 
 float QB2Body::GetLinearDamping() const
@@ -238,13 +268,32 @@ bool QB2Body::IsFixedRotation() const
     return b2body_->IsFixedRotation();
 }
 
-QVector2D QB2Body::MapForceToLocal(const QVector2D& force) const
+QVector2D QB2Body::MapVectorToLocal(const QVector2D& vector) const
 {
-    QPointF point = {force.x(), force.y()};
+    QPointF point = {vector.x(), vector.y()};
     QTransform transform;
     transform.rotate(GetAngle());
     auto p = transform.map(point);
     return QVector2D(p.x(), p.y());
+}
+
+QVector2D QB2Body::MapVectorFromLocal(const QVector2D& vector) const
+{
+    QPointF point = {vector.x(), vector.y()};
+    QTransform transform;
+    transform.rotate(-GetAngle());
+    auto p = transform.map(point);
+    return QVector2D(p.x(), p.y());
+}
+
+QPointF QB2Body::MapToScenePos(const QPointF& pos) const
+{
+    return GetWorldTransform().map(pos);
+}
+
+QPointF QB2Body::MapFromScenePos(const QPointF& scenePos) const
+{
+    return GetWorldTransform().inverted().map(scenePos);
 }
 
 void QB2Body::Update()
@@ -255,7 +304,7 @@ void QB2Body::Update()
     for(const QB2Fixture& fixture: fixtures_) {
         fixture.Debug();
     }
-    setPos(GetPos());
+    setPos(GetScenePos());
     setRotation(GetAngle());
     OnUpdate();
 }

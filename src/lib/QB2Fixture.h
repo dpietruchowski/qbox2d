@@ -7,6 +7,7 @@
 #include "qbox2d_global.h"
 
 class QPainter;
+class QTransform;
 class QB2Body;
 
 struct QBOX2DSHARED_EXPORT b2FixtureParams
@@ -35,6 +36,7 @@ public:
     void SetSensor(bool sensor);
 
     QB2Body& GetBody();
+    const QTransform& GetWorldTransform() const;
 
     b2Filter GetFilterData() const;
     float32 GetFriction() const;

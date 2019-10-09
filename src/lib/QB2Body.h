@@ -26,11 +26,15 @@ public:
     ~QB2Body() override;
 
     int GetId() const;
+    const QTransform& GetWorldTransform() const;
 
     void AddFixture(QB2Fixture& fixture);
     void RemoveFixture(QB2Fixture& fixture);
 
+    void CreateJoint(QB2Body& body, b2JointDef& jointDef);
+
     void SetPos(QPointF pos);
+    void SetScenePos(const QPointF& scenePos);
     void SetPos(float x, float y);
     // angle in degrees
     void SetAngle(float angle);
@@ -56,6 +60,8 @@ public:
     void ResetMassData();
 
     QPointF GetPos() const;
+    QPointF GetScenePos() const;
+    float GetRadiansAngle() const;
     float GetAngle() const;
     QVector2D GetLinearVelocity() const;
     float32 GetAngularVelocity() const;
@@ -69,7 +75,10 @@ public:
     bool IsActive() const;
     bool IsFixedRotation() const;
 
-    QVector2D MapForceToLocal(const QVector2D& force) const;
+    QVector2D MapVectorToLocal(const QVector2D& vector) const;
+    QVector2D MapVectorFromLocal(const QVector2D& vector) const;
+    QPointF MapToScenePos(const QPointF& pos) const;
+    QPointF MapFromScenePos(const QPointF& scenePos) const;
 
     void Update();
 

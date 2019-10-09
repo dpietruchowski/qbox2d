@@ -55,7 +55,7 @@ QPolygonF QB2PolygonFixture::CreatePolygon() const
         points.push_back(point);
     }
 
-    return QPolygonF(points);
+    return GetWorldTransform().map(QPolygonF(points));
 }
 
 b2Shape* QB2PolygonFixture::CreateShape(const QPolygonF& polygon) const
