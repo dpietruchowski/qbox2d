@@ -15,11 +15,17 @@
 QB2World::QB2World(const b2Vec2& gravity, QObject *parent)
     : QGraphicsScene(parent), b2world_(gravity), contactListener_(*this)
 {
-    addEllipse({0, 0, 5, 5}, QPen(Qt::red), QBrush(Qt::red));
+    // Scale factor for Box2D coordinates to Qt scene coordinates
+    constexpr qreal scaleFactorX = 10.0;
+    constexpr qreal scaleFactorY = 10.0;
+    
+    // Origin marker (small red circle at 0,0)
+    constexpr qreal originMarkerSize = 5.0;
+    addEllipse({0, 0, originMarkerSize, originMarkerSize}, QPen(Qt::red), QBrush(Qt::red));
     mousePosText_ = addText("");
     b2world_.SetContactListener(&contactListener_);
     connect(&timer_, &QTimer::timeout, this, &QB2World::Step);
-    transform_.scale(10, 10);
+    transform_.scale(scaleFactorX, scaleFactorY);
 }
 
 QB2World::~QB2World()

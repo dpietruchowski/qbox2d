@@ -373,8 +373,9 @@ void QB2Body::Delete()
 
 float QB2Body::MapAngle360(float angle) const
 {
-    angle = std::fmod(angle, 360.f);
+    constexpr float fullCircleDegrees = 360.0f;
+    angle = std::fmod(angle, fullCircleDegrees);
     if (angle < 0)
-        angle += 360;
+        angle += fullCircleDegrees;
     return angle;
 }

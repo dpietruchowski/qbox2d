@@ -10,7 +10,9 @@
 
 QB2Scene::QB2Scene(QObject *parent) : QGraphicsScene(parent)
 {
-    addEllipse({0, 0, 5, 5}, QPen(Qt::red), QBrush(Qt::red));
+    // Origin marker (small red circle at 0,0)
+    constexpr qreal originMarkerSize = 5.0;
+    addEllipse({0, 0, originMarkerSize, originMarkerSize}, QPen(Qt::red), QBrush(Qt::red));
     mousePosText_ = addText("");
 }
 
