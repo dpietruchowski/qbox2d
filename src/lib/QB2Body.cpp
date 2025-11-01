@@ -1,6 +1,6 @@
 #include "QB2Body.h"
 
-#include <math.h>
+#include <cmath>
 
 #include <QApplication>
 #include <QDebug>

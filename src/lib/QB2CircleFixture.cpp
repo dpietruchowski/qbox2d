@@ -40,7 +40,8 @@ void QB2CircleFixture::Paint(QPainter* painter) const
 
 QRectF QB2CircleFixture::boundingRect() const
 {
-    return ellipse_.marginsAdded({2, 2, 2, 2});
+    constexpr qreal margin = 2.0;
+    return ellipse_.marginsAdded({margin, margin, margin, margin});
 }
 
 void QB2CircleFixture::Debug() const
@@ -67,11 +68,16 @@ b2FixtureDef QB2CircleFixture::CreateFixtureDef(float32 radius,
                                                 const b2Filter& filter) const
 {
     b2FixtureDef fixtureDef;
-    fixtureDef.shape = CreateShape(radius);
-    fixtureDef.friction = params.friction;
-    fixtureDef.restitution = params.restitution;
-    fixtureDef.density = params.density;
-    fixtureDef.filter = filter;
-
+    b2Shape* shape = CreateShape(radius);
+    try {
+        fixtureDef.shape = shape;
+        fixtureDef.friction = params.friction;
+        fixtureDef.restitution = params.restitution;
+        fixtureDef.density = params.density;
+        fixtureDef.filter = filter;
+    } catch (...) {
+        delete shape;
+        throw;
+    }
     return fixtureDef;
 }

@@ -8,6 +8,7 @@ class QB2Object
 {
 public:
     QB2Object() = default;
+    virtual ~QB2Object() = default;
 
 public:
     virtual void OnUpdate();

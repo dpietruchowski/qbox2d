@@ -38,9 +38,9 @@ QB2Fixture* QB2ContactEvent::GetOtherFixture()
 QB2Body* QB2ContactEvent::GetOtherBody()
 {
     if (IsA())
-        return GetBodyA();
-    else
         return GetBodyB();
+    else
+        return GetBodyA();
 }
 
 QB2Fixture* QB2ContactEvent::GetFixtureA()

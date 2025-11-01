@@ -9,7 +9,12 @@ QB2Fixture::QB2Fixture(const b2FixtureDef& fixtureDef, QB2Body& body)
 {
     // Note: The shape will be deleted after creating the fixture
     // This is safe because Box2D makes an internal copy of the shape
-    Create(fixtureDef);
+    try {
+        Create(fixtureDef);
+    } catch (...) {
+        delete fixtureDef.shape;
+        throw;
+    }
     delete fixtureDef.shape;
 }
 
@@ -19,7 +24,12 @@ QB2Fixture::QB2Fixture(const b2Shape* shape, QB2Body& body)
     b2FixtureDef fixtureDef;
     fixtureDef.shape = shape;
     fixtureDef.density = 0.001f;
-    Create(fixtureDef);
+    try {
+        Create(fixtureDef);
+    } catch (...) {
+        delete shape;
+        throw;
+    }
     delete shape;
 }
 
@@ -114,12 +124,13 @@ void QB2Fixture::PreparePaint(QPainter*) const
 
 QRectF QB2Fixture::boundingRect() const
 {
+    constexpr qreal margin = 5.0;
     b2AABB aabb = b2fixture_->GetAABB(0);
 
     QRectF rect = QRectF(QPointF(aabb.lowerBound.x, aabb.lowerBound.y),
                          QPointF(aabb.upperBound.x, aabb.upperBound.y));
 
-    rect = rect.marginsAdded(QMarginsF(5,5,5,5));
+    rect = rect.marginsAdded(QMarginsF(margin, margin, margin, margin));
     return rect;
 }
 

@@ -36,7 +36,8 @@ void QB2PolygonFixture::Paint(QPainter* painter) const
 
 QRectF QB2PolygonFixture::boundingRect() const
 {
-    return polygon_.boundingRect().marginsAdded({2, 2, 2, 2});
+    constexpr qreal margin = 2.0;
+    return polygon_.boundingRect().marginsAdded({margin, margin, margin, margin});
 }
 
 void QB2PolygonFixture::Debug() const
@@ -74,11 +75,16 @@ b2FixtureDef QB2PolygonFixture::CreateFixtureDef(const QPolygonF& polygon,
                                                  const b2Filter& filter) const
 {
     b2FixtureDef fixtureDef;
-    fixtureDef.shape = CreateShape(polygon);
-    fixtureDef.friction = params.friction;
-    fixtureDef.restitution = params.restitution;
-    fixtureDef.density = params.density;
-    fixtureDef.filter = filter;
-
+    b2Shape* shape = CreateShape(polygon);
+    try {
+        fixtureDef.shape = shape;
+        fixtureDef.friction = params.friction;
+        fixtureDef.restitution = params.restitution;
+        fixtureDef.density = params.density;
+        fixtureDef.filter = filter;
+    } catch (...) {
+        delete shape;
+        throw;
+    }
     return fixtureDef;
 }
