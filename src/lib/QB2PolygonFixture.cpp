@@ -77,7 +77,7 @@ b2FixtureDef QB2PolygonFixture::CreateFixtureDef(const QPolygonF& polygon,
     fixtureDef.shape = CreateShape(polygon);
     fixtureDef.friction = params.friction;
     fixtureDef.restitution = params.restitution;
-    fixtureDef.density = params.denstity;
+    fixtureDef.density = params.density;
     fixtureDef.filter = filter;
 
     return fixtureDef;

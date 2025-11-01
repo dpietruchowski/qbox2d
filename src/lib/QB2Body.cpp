@@ -51,7 +51,7 @@ int QB2Body::GetId() const
 
 const QTransform& QB2Body::GetWorldTransform() const
 {
-    scene_.GetTransform();
+    return scene_.GetTransform();
 }
 
 void QB2Body::AddFixture(QB2Fixture& fixture)
@@ -312,10 +312,6 @@ void QB2Body::Update()
 void QB2Body::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*)
 {
     for(const QB2Fixture& fixture: fixtures_) {
-        /*painter->save();
-        painter->setBrush(QBrush(QColor(Qt::yellow)));
-        painter->drawRect(fixture.boundingRect());
-        painter->restore();*/
         painter->save();
         PreparePaint(painter);
         fixture.PaintFixture(painter);

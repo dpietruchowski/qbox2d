@@ -67,13 +67,23 @@ const QTransform& QB2World::GetTransform() const
 
 void QB2World::Step()
 {
-    b2world_.Step(1.f/60, 8, 3);
+    // Box2D recommended physics step parameters:
+    // timeStep: fixed time step of 1/60 second (60 FPS)
+    // velocityIterations: 8 iterations for velocity constraint solver
+    // positionIterations: 3 iterations for position constraint solver
+    constexpr float timeStep = 1.0f / 60.0f;
+    constexpr int32 velocityIterations = 8;
+    constexpr int32 positionIterations = 3;
+    
+    b2world_.Step(timeStep, velocityIterations, positionIterations);
     Update();
 }
 
 void QB2World::Start()
 {
-    timer_.start(1000/60);
+    constexpr int framesPerSecond = 60;
+    constexpr int millisecondsPerFrame = 1000 / framesPerSecond;
+    timer_.start(millisecondsPerFrame);
 }
 
 void QB2World::Stop()
@@ -105,7 +115,6 @@ void QB2World::DrawJoints(QPainter* painter)
         QPointF anchorA = {joint->GetAnchorA().x, joint->GetAnchorA().y};
         QPointF anchorB = {joint->GetAnchorB().x, joint->GetAnchorB().y};
         painter->drawLine(anchorA, anchorB);
-        qDebug() << anchorA << anchorB;
         joint = joint->GetNext();
     }
 }
@@ -154,9 +163,7 @@ void QB2World::drawBackground(QPainter* painter, const QRectF& rect)
 
     // draw horizontal grid
     qreal startTop = GetStart(rect.top());
-    int i = 0;
     for (qreal y = startTop; y <= rect.bottom(); y += step) {
-        ++i;
        painter->drawLine(rect.left(), y, rect.right(), y);
     }
     // now draw vertical grid

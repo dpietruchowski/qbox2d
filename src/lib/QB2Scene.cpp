@@ -44,9 +44,7 @@ void QB2Scene::drawBackground(QPainter* painter, const QRectF& rect)
 
     // draw horizontal grid
     qreal startTop = GetStart(rect.top());
-    int i = 0;
     for (qreal y = startTop; y <= rect.bottom(); y += step) {
-        ++i;
        painter->drawLine(rect.left(), y, rect.right(), y);
     }
     // now draw vertical grid
@@ -55,18 +53,3 @@ void QB2Scene::drawBackground(QPainter* painter, const QRectF& rect)
        painter->drawLine(x, rect.top(), x, rect.bottom());
     }
 }
-/*
-void QB2Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
-{
-    QPointF mousePosition = event->scenePos();
-
-    QString textMouse = "(%1, %2)";
-    QString xpos = QString::number(mousePosition.x());
-    QString ypos = QString::number(mousePosition.y());
-    // now draw mouse position
-    mousePosText_->setPlainText(textMouse.arg(xpos).arg(ypos));
-    mousePosText_->setPos(mousePosition.x()+4, mousePosition.y());
-
-    QGraphicsScene::mouseMoveEvent(event);
-}
-*/

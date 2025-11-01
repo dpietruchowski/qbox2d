@@ -70,7 +70,7 @@ b2FixtureDef QB2CircleFixture::CreateFixtureDef(float32 radius,
     fixtureDef.shape = CreateShape(radius);
     fixtureDef.friction = params.friction;
     fixtureDef.restitution = params.restitution;
-    fixtureDef.density = params.denstity;
+    fixtureDef.density = params.density;
     fixtureDef.filter = filter;
 
     return fixtureDef;

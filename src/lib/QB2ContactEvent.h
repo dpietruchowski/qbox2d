@@ -35,7 +35,7 @@ private:
     QB2Fixture* fixtureA_ = nullptr;
     QB2Fixture* fixtureB_ = nullptr;
     b2Contact* contact_ = nullptr;
-    bool isA = true;
+    bool isA_ = true;
 };
 
 #endif // QB2CONTACTEVENT_H

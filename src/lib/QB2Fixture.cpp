@@ -7,6 +7,8 @@
 QB2Fixture::QB2Fixture(const b2FixtureDef& fixtureDef, QB2Body& body)
     : b2fixture_(nullptr), body_(body)
 {
+    // Note: The shape will be deleted after creating the fixture
+    // This is safe because Box2D makes an internal copy of the shape
     Create(fixtureDef);
     delete fixtureDef.shape;
 }
@@ -41,14 +43,14 @@ void QB2Fixture::SetFilterData(const b2Filter& filter)
 
 void QB2Fixture::SetParams(const b2FixtureParams& params)
 {
-    SetParams(params.friction, params.restitution, params.denstity);
+    SetParams(params.friction, params.restitution, params.density);
 }
 
-void QB2Fixture::SetParams(float32 friction, float32 restitution, float32 denstity)
+void QB2Fixture::SetParams(float32 friction, float32 restitution, float32 density)
 {
     SetFriction(friction);
     SetRestitution(restitution);
-    SetDensity(denstity);
+    SetDensity(density);
 }
 
 void QB2Fixture::SetFriction(float32 friction)
@@ -61,9 +63,14 @@ void QB2Fixture::SetRestitution(float32 restitution)
     b2fixture_->SetRestitution(restitution);
 }
 
-void QB2Fixture::SetDensity(float32 denstity)
+void QB2Fixture::SetDensity(float32 density)
 {
-    b2fixture_->SetDensity(denstity);
+    b2fixture_->SetDensity(density);
+}
+
+void QB2Fixture::SetSensor(bool sensor)
+{
+    b2fixture_->SetSensor(sensor);
 }
 
 QB2Body& QB2Fixture::GetBody()

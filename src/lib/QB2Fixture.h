@@ -14,7 +14,7 @@ struct QBOX2DSHARED_EXPORT b2FixtureParams
 {
     float32 friction;
     float32 restitution;
-    float32 denstity;
+    float32 density;
 };
 
 class QBOX2DSHARED_EXPORT QB2Fixture
@@ -29,10 +29,10 @@ public:
 
     void SetFilterData(const b2Filter& filter);
     void SetParams(const b2FixtureParams& params);
-    void SetParams(float32 friction, float32 restitution, float32 denstity);
+    void SetParams(float32 friction, float32 restitution, float32 density);
     void SetFriction(float32 friction);
     void SetRestitution(float32 restitution);
-    void SetDensity(float32 denstity);
+    void SetDensity(float32 density);
     void SetSensor(bool sensor);
 
     QB2Body& GetBody();
