@@ -1,5 +1,6 @@
 #include "QB2PolygonFixture.h"
 
+#include <memory>
 #include <QPainter>
 #include <QDebug>
 
@@ -36,7 +37,8 @@ void QB2PolygonFixture::Paint(QPainter* painter) const
 
 QRectF QB2PolygonFixture::boundingRect() const
 {
-    return polygon_.boundingRect().marginsAdded({2, 2, 2, 2});
+    constexpr qreal margin = 2.0;
+    return polygon_.boundingRect().marginsAdded({margin, margin, margin, margin});
 }
 
 void QB2PolygonFixture::Debug() const
@@ -74,11 +76,14 @@ b2FixtureDef QB2PolygonFixture::CreateFixtureDef(const QPolygonF& polygon,
                                                  const b2Filter& filter) const
 {
     b2FixtureDef fixtureDef;
-    fixtureDef.shape = CreateShape(polygon);
+    // Use unique_ptr for automatic cleanup in case of exceptions
+    std::unique_ptr<b2Shape> shape(CreateShape(polygon));
+    fixtureDef.shape = shape.get();
     fixtureDef.friction = params.friction;
     fixtureDef.restitution = params.restitution;
-    fixtureDef.density = params.denstity;
+    fixtureDef.density = params.density;
     fixtureDef.filter = filter;
-
+    // Shape ownership is transferred to caller, will be deleted in QB2Fixture constructor
+    shape.release();
     return fixtureDef;
 }

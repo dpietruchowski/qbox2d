@@ -1,5 +1,6 @@
 #include "QB2Fixture.h"
 
+#include <memory>
 #include <QPainter>
 #include <QMutexLocker>
 #include "QB2Body.h"
@@ -7,18 +8,24 @@
 QB2Fixture::QB2Fixture(const b2FixtureDef& fixtureDef, QB2Body& body)
     : b2fixture_(nullptr), body_(body)
 {
+    // Note: The shape will be deleted after creating the fixture
+    // This is safe because Box2D makes an internal copy of the shape
+    // Use unique_ptr for automatic cleanup in case of exceptions
+    std::unique_ptr<const b2Shape> shape(fixtureDef.shape);
     Create(fixtureDef);
-    delete fixtureDef.shape;
+    // Shape is automatically deleted when unique_ptr goes out of scope
 }
 
 QB2Fixture::QB2Fixture(const b2Shape* shape, QB2Body& body)
     : b2fixture_(nullptr), body_(body)
 {
+    // Use unique_ptr for automatic cleanup in case of exceptions
+    std::unique_ptr<const b2Shape> shapePtr(shape);
     b2FixtureDef fixtureDef;
-    fixtureDef.shape = shape;
+    fixtureDef.shape = shapePtr.get();
     fixtureDef.density = 0.001f;
     Create(fixtureDef);
-    delete shape;
+    // Shape is automatically deleted when unique_ptr goes out of scope
 }
 
 QB2Fixture::~QB2Fixture()
@@ -41,14 +48,14 @@ void QB2Fixture::SetFilterData(const b2Filter& filter)
 
 void QB2Fixture::SetParams(const b2FixtureParams& params)
 {
-    SetParams(params.friction, params.restitution, params.denstity);
+    SetParams(params.friction, params.restitution, params.density);
 }
 
-void QB2Fixture::SetParams(float32 friction, float32 restitution, float32 denstity)
+void QB2Fixture::SetParams(float32 friction, float32 restitution, float32 density)
 {
     SetFriction(friction);
     SetRestitution(restitution);
-    SetDensity(denstity);
+    SetDensity(density);
 }
 
 void QB2Fixture::SetFriction(float32 friction)
@@ -61,9 +68,14 @@ void QB2Fixture::SetRestitution(float32 restitution)
     b2fixture_->SetRestitution(restitution);
 }
 
-void QB2Fixture::SetDensity(float32 denstity)
+void QB2Fixture::SetDensity(float32 density)
 {
-    b2fixture_->SetDensity(denstity);
+    b2fixture_->SetDensity(density);
+}
+
+void QB2Fixture::SetSensor(bool sensor)
+{
+    b2fixture_->SetSensor(sensor);
 }
 
 QB2Body& QB2Fixture::GetBody()
@@ -107,12 +119,13 @@ void QB2Fixture::PreparePaint(QPainter*) const
 
 QRectF QB2Fixture::boundingRect() const
 {
+    constexpr qreal margin = 5.0;
     b2AABB aabb = b2fixture_->GetAABB(0);
 
     QRectF rect = QRectF(QPointF(aabb.lowerBound.x, aabb.lowerBound.y),
                          QPointF(aabb.upperBound.x, aabb.upperBound.y));
 
-    rect = rect.marginsAdded(QMarginsF(5,5,5,5));
+    rect = rect.marginsAdded(QMarginsF(margin, margin, margin, margin));
     return rect;
 }
 

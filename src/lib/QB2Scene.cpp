@@ -10,7 +10,9 @@
 
 QB2Scene::QB2Scene(QObject *parent) : QGraphicsScene(parent)
 {
-    addEllipse({0, 0, 5, 5}, QPen(Qt::red), QBrush(Qt::red));
+    // Origin marker (small red circle at 0,0)
+    constexpr qreal originMarkerSize = 5.0;
+    addEllipse({0, 0, originMarkerSize, originMarkerSize}, QPen(Qt::red), QBrush(Qt::red));
     mousePosText_ = addText("");
 }
 
@@ -31,9 +33,10 @@ void QB2Scene::UpdateBody(QB2Body* body)
 
 void QB2Scene::drawBackground(QPainter* painter, const QRectF& rect)
 {
-    int step = 10;
+    constexpr int gridStep = 10;
     painter->setPen(QPen(QColor(200, 200, 255, 125)));
-    auto GetStart = [step](qreal edge) {
+    
+    auto GetStart = [](qreal edge, int step) {
         double mod = fmod(edge, step);
         if (edge < 0 || mod == 0.0) {
             return edge - mod;
@@ -43,30 +46,13 @@ void QB2Scene::drawBackground(QPainter* painter, const QRectF& rect)
     };
 
     // draw horizontal grid
-    qreal startTop = GetStart(rect.top());
-    int i = 0;
-    for (qreal y = startTop; y <= rect.bottom(); y += step) {
-        ++i;
+    qreal startTop = GetStart(rect.top(), gridStep);
+    for (qreal y = startTop; y <= rect.bottom(); y += gridStep) {
        painter->drawLine(rect.left(), y, rect.right(), y);
     }
     // now draw vertical grid
-    qreal startLeft = GetStart(rect.left());
-    for (qreal x = startLeft; x <= rect.right(); x += step) {
+    qreal startLeft = GetStart(rect.left(), gridStep);
+    for (qreal x = startLeft; x <= rect.right(); x += gridStep) {
        painter->drawLine(x, rect.top(), x, rect.bottom());
     }
 }
-/*
-void QB2Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
-{
-    QPointF mousePosition = event->scenePos();
-
-    QString textMouse = "(%1, %2)";
-    QString xpos = QString::number(mousePosition.x());
-    QString ypos = QString::number(mousePosition.y());
-    // now draw mouse position
-    mousePosText_->setPlainText(textMouse.arg(xpos).arg(ypos));
-    mousePosText_->setPos(mousePosition.x()+4, mousePosition.y());
-
-    QGraphicsScene::mouseMoveEvent(event);
-}
-*/

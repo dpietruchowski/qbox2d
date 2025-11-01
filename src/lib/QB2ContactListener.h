@@ -2,6 +2,7 @@
 #define QB2CONTACTLISTENER_H
 
 #include <Box2D/Box2D.h>
+#include "QB2ContactEvent.h"
 
 class QB2World;
 
@@ -14,6 +15,9 @@ public:
     void EndContact(b2Contact* contact) override;
     void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) override;
     void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override;
+
+private:
+    void SendContactEvent(QB2ContactEvent::Type eventType, b2Contact* contact);
 
 private:
     QB2World& world_;

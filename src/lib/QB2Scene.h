@@ -17,7 +17,6 @@ public:
 
 protected:
     void drawBackground(QPainter *painter, const QRectF &rect) override;
-    //void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
     QGraphicsTextItem *mousePosText_;

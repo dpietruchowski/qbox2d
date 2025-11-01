@@ -9,17 +9,17 @@ QB2ContactEvent::QB2ContactEvent(QB2ContactEvent::Type type, b2Contact* contact)
 
 void QB2ContactEvent::SetA()
 {
-    isA = true;
+    isA_ = true;
 }
 
 void QB2ContactEvent::SetB()
 {
-    isA = false;
+    isA_ = false;
 }
 
 bool QB2ContactEvent::IsA() const
 {
-    return isA;
+    return isA_;
 }
 
 bool QB2ContactEvent::IsB() const
@@ -38,9 +38,9 @@ QB2Fixture* QB2ContactEvent::GetOtherFixture()
 QB2Body* QB2ContactEvent::GetOtherBody()
 {
     if (IsA())
-        return GetBodyA();
-    else
         return GetBodyB();
+    else
+        return GetBodyA();
 }
 
 QB2Fixture* QB2ContactEvent::GetFixtureA()

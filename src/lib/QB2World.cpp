@@ -15,11 +15,17 @@
 QB2World::QB2World(const b2Vec2& gravity, QObject *parent)
     : QGraphicsScene(parent), b2world_(gravity), contactListener_(*this)
 {
-    addEllipse({0, 0, 5, 5}, QPen(Qt::red), QBrush(Qt::red));
+    // Scale factor for Box2D coordinates to Qt scene coordinates
+    constexpr qreal scaleFactorX = 10.0;
+    constexpr qreal scaleFactorY = 10.0;
+    
+    // Origin marker (small red circle at 0,0)
+    constexpr qreal originMarkerSize = 5.0;
+    addEllipse({0, 0, originMarkerSize, originMarkerSize}, QPen(Qt::red), QBrush(Qt::red));
     mousePosText_ = addText("");
     b2world_.SetContactListener(&contactListener_);
     connect(&timer_, &QTimer::timeout, this, &QB2World::Step);
-    transform_.scale(10, 10);
+    transform_.scale(scaleFactorX, scaleFactorY);
 }
 
 QB2World::~QB2World()
@@ -67,13 +73,23 @@ const QTransform& QB2World::GetTransform() const
 
 void QB2World::Step()
 {
-    b2world_.Step(1.f/60, 8, 3);
+    // Box2D recommended physics step parameters:
+    // timeStep: fixed time step of 1/60 second (60 FPS)
+    // velocityIterations: 8 iterations for velocity constraint solver
+    // positionIterations: 3 iterations for position constraint solver
+    constexpr float timeStep = 1.0f / 60.0f;
+    constexpr int32 velocityIterations = 8;
+    constexpr int32 positionIterations = 3;
+    
+    b2world_.Step(timeStep, velocityIterations, positionIterations);
     Update();
 }
 
 void QB2World::Start()
 {
-    timer_.start(1000/60);
+    constexpr int framesPerSecond = 60;
+    constexpr int millisecondsPerFrame = 1000 / framesPerSecond;
+    timer_.start(millisecondsPerFrame);
 }
 
 void QB2World::Stop()
@@ -105,7 +121,6 @@ void QB2World::DrawJoints(QPainter* painter)
         QPointF anchorA = {joint->GetAnchorA().x, joint->GetAnchorA().y};
         QPointF anchorB = {joint->GetAnchorB().x, joint->GetAnchorB().y};
         painter->drawLine(anchorA, anchorB);
-        qDebug() << anchorA << anchorB;
         joint = joint->GetNext();
     }
 }
@@ -141,9 +156,10 @@ void QB2World::RemoveBody(QB2Body& body)
 
 void QB2World::drawBackground(QPainter* painter, const QRectF& rect)
 {
-    int step = 10;
+    constexpr int gridStep = 10;
     painter->setPen(QPen(QColor(200, 200, 255, 125)));
-    auto GetStart = [step](qreal edge) {
+    
+    auto GetStart = [](qreal edge, int step) {
         double mod = fmod(edge, step);
         if (edge < 0 || mod == 0.0) {
             return edge - mod;
@@ -153,15 +169,13 @@ void QB2World::drawBackground(QPainter* painter, const QRectF& rect)
     };
 
     // draw horizontal grid
-    qreal startTop = GetStart(rect.top());
-    int i = 0;
-    for (qreal y = startTop; y <= rect.bottom(); y += step) {
-        ++i;
+    qreal startTop = GetStart(rect.top(), gridStep);
+    for (qreal y = startTop; y <= rect.bottom(); y += gridStep) {
        painter->drawLine(rect.left(), y, rect.right(), y);
     }
     // now draw vertical grid
-    qreal startLeft = GetStart(rect.left());
-    for (qreal x = startLeft; x <= rect.right(); x += step) {
+    qreal startLeft = GetStart(rect.left(), gridStep);
+    for (qreal x = startLeft; x <= rect.right(); x += gridStep) {
        painter->drawLine(x, rect.top(), x, rect.bottom());
     }
 }

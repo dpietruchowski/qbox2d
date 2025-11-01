@@ -1,5 +1,6 @@
 #include "QB2CircleFixture.h"
 
+#include <memory>
 #include <QPainter>
 
 #include "Box2D/Box2D.h"
@@ -40,7 +41,8 @@ void QB2CircleFixture::Paint(QPainter* painter) const
 
 QRectF QB2CircleFixture::boundingRect() const
 {
-    return ellipse_.marginsAdded({2, 2, 2, 2});
+    constexpr qreal margin = 2.0;
+    return ellipse_.marginsAdded({margin, margin, margin, margin});
 }
 
 void QB2CircleFixture::Debug() const
@@ -67,11 +69,14 @@ b2FixtureDef QB2CircleFixture::CreateFixtureDef(float32 radius,
                                                 const b2Filter& filter) const
 {
     b2FixtureDef fixtureDef;
-    fixtureDef.shape = CreateShape(radius);
+    // Use unique_ptr for automatic cleanup in case of exceptions
+    std::unique_ptr<b2Shape> shape(CreateShape(radius));
+    fixtureDef.shape = shape.get();
     fixtureDef.friction = params.friction;
     fixtureDef.restitution = params.restitution;
-    fixtureDef.density = params.denstity;
+    fixtureDef.density = params.density;
     fixtureDef.filter = filter;
-
+    // Shape ownership is transferred to caller, will be deleted in QB2Fixture constructor
+    shape.release();
     return fixtureDef;
 }
