@@ -1,5 +1,6 @@
 #include "QB2Fixture.h"
 
+#include <memory>
 #include <QPainter>
 #include <QMutexLocker>
 #include "QB2Body.h"
@@ -9,28 +10,22 @@ QB2Fixture::QB2Fixture(const b2FixtureDef& fixtureDef, QB2Body& body)
 {
     // Note: The shape will be deleted after creating the fixture
     // This is safe because Box2D makes an internal copy of the shape
-    try {
-        Create(fixtureDef);
-    } catch (...) {
-        delete fixtureDef.shape;
-        throw;
-    }
-    delete fixtureDef.shape;
+    // Use unique_ptr for automatic cleanup in case of exceptions
+    std::unique_ptr<const b2Shape> shape(fixtureDef.shape);
+    Create(fixtureDef);
+    // Shape is automatically deleted when unique_ptr goes out of scope
 }
 
 QB2Fixture::QB2Fixture(const b2Shape* shape, QB2Body& body)
     : b2fixture_(nullptr), body_(body)
 {
+    // Use unique_ptr for automatic cleanup in case of exceptions
+    std::unique_ptr<const b2Shape> shapePtr(shape);
     b2FixtureDef fixtureDef;
-    fixtureDef.shape = shape;
+    fixtureDef.shape = shapePtr.get();
     fixtureDef.density = 0.001f;
-    try {
-        Create(fixtureDef);
-    } catch (...) {
-        delete shape;
-        throw;
-    }
-    delete shape;
+    Create(fixtureDef);
+    // Shape is automatically deleted when unique_ptr goes out of scope
 }
 
 QB2Fixture::~QB2Fixture()

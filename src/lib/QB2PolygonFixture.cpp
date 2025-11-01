@@ -1,5 +1,6 @@
 #include "QB2PolygonFixture.h"
 
+#include <memory>
 #include <QPainter>
 #include <QDebug>
 
@@ -75,16 +76,14 @@ b2FixtureDef QB2PolygonFixture::CreateFixtureDef(const QPolygonF& polygon,
                                                  const b2Filter& filter) const
 {
     b2FixtureDef fixtureDef;
-    b2Shape* shape = CreateShape(polygon);
-    try {
-        fixtureDef.shape = shape;
-        fixtureDef.friction = params.friction;
-        fixtureDef.restitution = params.restitution;
-        fixtureDef.density = params.density;
-        fixtureDef.filter = filter;
-    } catch (...) {
-        delete shape;
-        throw;
-    }
+    // Use unique_ptr for automatic cleanup in case of exceptions
+    std::unique_ptr<b2Shape> shape(CreateShape(polygon));
+    fixtureDef.shape = shape.get();
+    fixtureDef.friction = params.friction;
+    fixtureDef.restitution = params.restitution;
+    fixtureDef.density = params.density;
+    fixtureDef.filter = filter;
+    // Shape ownership is transferred to caller, will be deleted in QB2Fixture constructor
+    shape.release();
     return fixtureDef;
 }
